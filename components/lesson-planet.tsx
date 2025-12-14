@@ -41,7 +41,7 @@ export function LessonPlanet({
 
   return (
     <motion.div
-      className="absolute"
+      className="absolute pointer-events-none"
       style={{
         width: lesson.orbitRadius * 2,
         height: lesson.orbitRadius * 2,
@@ -66,7 +66,7 @@ export function LessonPlanet({
 
       {/* Planet with danger styling */}
       <motion.div
-        className="absolute rounded-full cursor-pointer flex items-center justify-center"
+        className="absolute rounded-full cursor-pointer flex items-center justify-center pointer-events-auto"
         style={{
           width: size,
           height: size,

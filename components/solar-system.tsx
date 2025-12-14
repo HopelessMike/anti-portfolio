@@ -36,6 +36,19 @@ export function SolarSystem({ userData }: SolarSystemProps) {
   // Check if any celestial body is hovered
   const isSystemHovered = hoveredItem !== null
 
+  // Reduce clutter: prefer fewer meaningful nodes over many similar ones.
+  // Keep the full data in the Flight Log + panel; here we only control what is rendered in the solar view.
+  const skillsToShow = [...userData.skills]
+    .slice()
+    .sort((a, b) => (b.relevance ?? 0) - (a.relevance ?? 0))
+    .slice(0, 5)
+    .sort((a, b) => (a.id ?? 0) - (b.id ?? 0))
+  const socialToShow = [...userData.socialLinks]
+    .slice()
+    .sort((a, b) => (b.relevance ?? 0) - (a.relevance ?? 0))
+    .slice(0, 3)
+  const lessonsToShow = userData.lessonsLearned.slice(0, 2)
+
   const handleSkillClick = (skill: Skill) => {
     setSelectedItem({ type: "skill", data: skill })
   }
@@ -82,10 +95,10 @@ export function SolarSystem({ userData }: SolarSystemProps) {
       />
 
       {/* Solar system container */}
-      <div className="relative w-[1100px] h-[1100px] max-w-full max-h-full">
+      <div className="relative w-[1100px] h-[1100px] max-w-full max-h-full origin-center scale-[0.9]">
         <CentralSun core={userData.core} coreDescription={userData.coreDescription} theme={userData.theme} />
 
-        {userData.skills.map((skill) => (
+        {skillsToShow.map((skill) => (
           <PlanetNode
             key={skill.id}
             skill={skill}
@@ -98,7 +111,7 @@ export function SolarSystem({ userData }: SolarSystemProps) {
           />
         ))}
 
-        {userData.socialLinks.map((social) => (
+        {socialToShow.map((social) => (
           <SocialPlanet
             key={social.id}
             social={social}
@@ -111,7 +124,7 @@ export function SolarSystem({ userData }: SolarSystemProps) {
           />
         ))}
 
-        {userData.lessonsLearned.map((lesson) => (
+        {lessonsToShow.map((lesson) => (
           <LessonPlanet
             key={lesson.id}
             lesson={lesson}

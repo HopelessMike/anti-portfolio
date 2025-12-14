@@ -24,7 +24,7 @@ async function analyzeProfile(openai: ReturnType<typeof getOpenAIClient>, conten
   const resp = await openai.chat.completions.create({
     model: serverConfig.openaiModel,
     messages: [
-      { role: "system", content: "Return valid JSON only. No markdown. No extra text." },
+      { role: "system", content: "Return valid JSON only. No markdown. No extra text. Do NOT invent facts; if uncertain, omit and note in limitations." },
       { role: "user", content: `${PROFILE_ANALYSIS_PROMPT}\n\n${content}` },
     ],
     max_completion_tokens: 4000,
@@ -50,7 +50,7 @@ async function generateAntiPortfolio(
   const resp = await openai.chat.completions.create({
     model: serverConfig.openaiModel,
     messages: [
-      { role: "system", content: "Return valid JSON only. No markdown. No extra text." },
+      { role: "system", content: "Return valid JSON only. No markdown. No extra text. Do NOT invent stories or facts; if unsupported by INPUT, say info not available and add limitations." },
       {
         role: "user",
         content:
@@ -67,6 +67,7 @@ async function generateAntiPortfolio(
           `- theme: choose exactly one of tech|marketing|design based on the profile\n` +
           `- name: use the real person name if present in the content; NEVER use placeholder names like "Mario Rossi", "Marco Rossi", "John Doe", "Alex Cosmo"\n` +
           `- Anti-portfolio rule: skills MUST be human capabilities/principles (NO tool/tech/certification names); projects must read like missions and focus on learning & human impact.\n` +
+          `- Non-fabrication rule: DO NOT invent incidents, years, companies, metrics, quotes, or story details; if missing, state "info non disponibile" and add to meta.limitations.\n` +
           `Set meta.sourceSummary.filesCount=${input.filesCount} and meta.sourceSummary.linksCount=${input.linksCount}.\n` +
           `Set generatedAt to current ISO date.\n`,
       },

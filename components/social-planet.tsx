@@ -39,7 +39,7 @@ export function SocialPlanet({
 
   return (
     <motion.div
-      className="absolute"
+      className="absolute pointer-events-none"
       style={{
         width: social.orbitRadius * 2,
         height: social.orbitRadius * 2,
@@ -64,7 +64,7 @@ export function SocialPlanet({
 
       {/* Planet */}
       <motion.div
-        className="absolute rounded-full cursor-pointer flex items-center justify-center"
+        className="absolute rounded-full cursor-pointer flex items-center justify-center pointer-events-auto"
         style={{
           width: size,
           height: size,

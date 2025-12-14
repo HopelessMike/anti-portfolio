@@ -239,22 +239,6 @@ function SkillPanel({
 }) {
   return (
     <div className="space-y-6">
-      <Card borderColor="rgba(255,255,255,0.10)" bg="rgba(255,255,255,0.03)">
-        <div className="flex items-center gap-2 text-sm text-white/50 mb-2">
-          <Tag className="h-4 w-4" />
-          <span>PROFICIENCY</span>
-        </div>
-        <div className="h-2 rounded-full bg-white/10 overflow-hidden">
-          <motion.div
-            className="h-full"
-            style={{ width: `${skill.level}%`, background: `linear-gradient(to right, ${primary}, ${secondary})` }}
-            initial={{ width: 0 }}
-            animate={{ width: `${skill.level}%` }}
-            transition={{ duration: 0.8 }}
-          />
-        </div>
-      </Card>
-
       {projects.length > 0 && (
         <Card borderColor="rgba(255,255,255,0.10)" bg="rgba(255,255,255,0.03)">
           <div className="text-sm text-white/50 mb-4">RELATED MISSIONS</div>

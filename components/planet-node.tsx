@@ -30,10 +30,11 @@ export function PlanetNode({
   const ringOpacity = isSelected || isHovered ? 0.55 : 0.12
   const texX = 30 + ((skill.id * 17) % 40)
   const texY = 28 + ((skill.id * 29) % 40)
+  const hueShiftDeg = ((skill.id * 23) % 34) - 17 // -17..+16 (small variation, deterministic)
 
   return (
     <motion.div
-      className="absolute"
+      className="absolute pointer-events-none"
       style={{
         width: skill.orbitRadius * 2,
         height: skill.orbitRadius * 2,
@@ -62,7 +63,7 @@ export function PlanetNode({
 
       {/* Planet */}
       <motion.div
-        className="absolute rounded-full cursor-pointer"
+        className="absolute rounded-full cursor-pointer pointer-events-auto"
         style={{
           width: size,
           height: size,
@@ -77,6 +78,7 @@ export function PlanetNode({
             isSelected || isHovered
               ? `0 0 40px ${colors.glow}, 0 0 80px ${colors.glow}, inset 0 0 20px rgba(255,255,255,0.3)`
               : `0 0 15px ${colors.glow}, inset 0 0 10px rgba(255,255,255,0.1)`,
+          filter: `hue-rotate(${hueShiftDeg}deg) saturate(1.08)`,
         }}
         onClick={onClick}
         onHoverStart={onHoverStart}
