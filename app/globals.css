@@ -125,6 +125,14 @@
   }
 }
 
+/* Core star helpers */
+.glow-primary {
+  box-shadow:
+    0 0 26px color-mix(in oklab, var(--primary) 55%, transparent),
+    0 0 52px color-mix(in oklab, var(--primary) 40%, transparent),
+    0 0 90px color-mix(in oklab, var(--secondary) 22%, transparent);
+}
+
 /* Custom font class for Space Grotesk headers */
 .font-space-grotesk {
   font-family: var(--font-space-grotesk);

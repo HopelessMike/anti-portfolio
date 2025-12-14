@@ -41,6 +41,33 @@ export default function HomePage() {
           </Link>
           <LoadFlightLogButton />
         </div>
+
+        <div className="mt-12 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-6">
+          <p className="font-mono text-xs tracking-[0.3em] text-white/50">{"// DEMO PROFILES"}</p>
+          <p className="mt-3 text-white/70 font-mono text-sm">
+            Esempi pre‑caricati (ognuno ha il suo link pubblico, senza dipendere dal tuo Flight Log locale):
+          </p>
+          <div className="mt-5 flex flex-col sm:flex-row gap-3">
+            <Link
+              href="/p/tech"
+              className="inline-flex items-center justify-center rounded-lg px-5 py-2.5 font-mono text-sm border border-white/10 bg-white/5 hover:bg-white/10 text-white/80"
+            >
+              Profilo Tech
+            </Link>
+            <Link
+              href="/p/marketing"
+              className="inline-flex items-center justify-center rounded-lg px-5 py-2.5 font-mono text-sm border border-white/10 bg-white/5 hover:bg-white/10 text-white/80"
+            >
+              Profilo Marketing
+            </Link>
+            <Link
+              href="/p/design"
+              className="inline-flex items-center justify-center rounded-lg px-5 py-2.5 font-mono text-sm border border-white/10 bg-white/5 hover:bg-white/10 text-white/80"
+            >
+              Profilo Design
+            </Link>
+          </div>
+        </div>
       </div>
     </div>
   )

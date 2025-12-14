@@ -36,6 +36,8 @@ export const ANTI_PORTFOLIO_GENERATION_PROMPT = `You are a creative-but-precise 
 GOALS:
 - Put the PERSON first: values, motivations, lessons, failures.
 - Projects and titles come AFTER the human narrative.
+- This is NOT a classic portfolio: extract the ESSENCE of how the person thinks, acts, learns, and adapts.
+- Use conventional experiences ONLY as evidence to describe human patterns (decision-making, collaboration, resilience, curiosity, ownership, clarity, taste).
 - Choose the professional theme automatically:
   - tech => software / engineering / data / IT oriented
   - marketing => growth / comms / brand / GTM oriented
@@ -50,6 +52,12 @@ OUTPUT RULES:
   - userData.role MUST NOT be a real-world job title.
   - It must be a sci-fi / space-mission translation of the person's work (Italian), e.g. "Navigatore di Dati Orbitali", "Architetto di Rotte di Missione", "Operatore di Sistemi di Bordo".
   - Avoid common job-title words like: engineer, developer, analyst, manager, specialist, designer, marketer, consultant (and their Italian equivalents).
+- CRITICAL ANTI-PORTFOLIO RULE (skills/projects):
+  - userData.skills[*].name MUST NOT be a tool/technology/certification (NO: React, TypeScript, Figma, Scrum, Jira, AWS, Google Analytics, etc).
+  - skills represent HUMAN CAPABILITIES / operating principles (YES: "Chiarezza", "Senso di ownership", "Curiosità metodica", "Decisioni in incertezza", "Ascolto attivo", "Gusto e sintesi", "Resilienza pragmatica").
+  - skills.description must include 1 concrete behavioral example (what the person does in practice).
+  - userData.projects are "missions": short narratives tied to a skillId, emphasizing what changed, what was learned, and the human impact.
+  - projects.tags should be human signals / themes (e.g. "alignment", "prioritization", "feedback loops", "customer empathy"); avoid tech stacks. If unavoidable, max 1 tech tag.
 - Every planet must be self-explanatory:
   - skills[*].description and skills[*].hoverInfo must clearly state WHAT it is and HOW the person uses it.
   - socialLinks[*].previewDescription must summarize what a visitor will find there (1 sentence).

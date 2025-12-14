@@ -1,0 +1,224 @@
+{
+  "version": "1.0",
+  "generatedAt": "2025-12-14T10:00:00.000Z",
+  "userData": {
+    "name": "Lorenzo Amani",
+    "role": "Ufficiale di Rotta per Mercati Emergenti",
+    "theme": "marketing",
+    "manifesto": "Non inseguo vanity metric: inseguo segnali di realtà. Faccio spazio alla verità del pubblico, anche quando smentisce le nostre certezze.",
+    "identityNegations": [
+      "Non sono le mie [[view]].",
+      "Non sono il mio [[funnel]] perfetto sulla carta.",
+      "Non sono la mia [[campagna]] migliore.",
+      "Non sono il mio [[ruolo]]: sono la mia curiosità verso le persone.",
+      "Non sono il mio [[pitch]]: sono ciò che ascolto quando nessuno applaude."
+    ],
+    "backgroundAudio": {
+      "trackId": "golden_launch_chillhop",
+      "volume": 0.3
+    },
+    "core": "Chiarezza",
+    "coreDescription": "Tagliare il rumore, nominare le ipotesi, scegliere un esperimento alla volta: comunicazione come navigazione, non come fuochi d’artificio.",
+    "skills": [
+      {
+        "id": 1,
+        "name": "Ascoltare il segnale",
+        "type": "marketing",
+        "planetType": "skill",
+        "level": 90,
+        "orbitRadius": 220,
+        "speed": 34,
+        "description": "Riconosco la differenza tra rumore e insight: raccolgo feedback, pattern e obiezioni senza difendermi.",
+        "relevance": 10,
+        "hoverInfo": "Il pubblico parla sempre: bisogna saperlo sentire."
+      },
+      {
+        "id": 2,
+        "name": "Sperimentare con disciplina",
+        "type": "marketing",
+        "planetType": "skill",
+        "level": 86,
+        "orbitRadius": 260,
+        "speed": 40,
+        "description": "Definisco ipotesi, criteri di stop e apprendimento atteso: test piccoli, rapidi, leggibili.",
+        "relevance": 9,
+        "hoverInfo": "Un test senza criterio è solo un’idea mascherata."
+      },
+      {
+        "id": 3,
+        "name": "Scrivere narrativa utile",
+        "type": "marketing",
+        "planetType": "skill",
+        "level": 82,
+        "orbitRadius": 300,
+        "speed": 46,
+        "description": "Trasformo valore complesso in messaggi semplici senza mentire: promessa chiara, prova concreta, tono umano.",
+        "relevance": 8,
+        "hoverInfo": "Storie che rispettano l’intelligenza di chi legge."
+      },
+      {
+        "id": 4,
+        "name": "Allineare equipaggi diversi",
+        "type": "marketing",
+        "planetType": "skill",
+        "level": 80,
+        "orbitRadius": 340,
+        "speed": 52,
+        "description": "Metto d’accordo prodotto, vendite e leadership su obiettivi e definizioni: stessa mappa, stesso nord.",
+        "relevance": 7,
+        "hoverInfo": "Se le parole non coincidono, i numeri ingannano."
+      },
+      {
+        "id": 5,
+        "name": "Empatia operativa",
+        "type": "marketing",
+        "planetType": "skill",
+        "level": 84,
+        "orbitRadius": 380,
+        "speed": 58,
+        "description": "Capisco contesto, paura e desiderio dietro una scelta: poi disegno messaggi che non manipolano.",
+        "relevance": 8,
+        "hoverInfo": "Non spingo: accompagno."
+      },
+      {
+        "id": 6,
+        "name": "Rendere misurabile l’immateriale",
+        "type": "marketing",
+        "planetType": "skill",
+        "level": 78,
+        "orbitRadius": 420,
+        "speed": 62,
+        "description": "Traduco obiettivi di brand e fiducia in indicatori utili, senza ridurre tutto a click.",
+        "relevance": 6,
+        "hoverInfo": "Misurare sì, ossessionarsi no."
+      },
+      {
+        "id": 7,
+        "name": "Proteggere il focus",
+        "type": "marketing",
+        "planetType": "skill",
+        "level": 76,
+        "orbitRadius": 460,
+        "speed": 68,
+        "description": "So dire no a canali “di moda” quando non sono coerenti: preferisco una rotta corta e leggibile.",
+        "relevance": 7,
+        "hoverInfo": "La strategia è anche rinuncia."
+      }
+    ],
+    "socialLinks": [
+      {
+        "id": "linkedin",
+        "name": "LinkedIn",
+        "planetType": "social",
+        "url": "https://example.com/lorenzo-amani/linkedin",
+        "icon": "linkedin",
+        "orbitRadius": 610,
+        "speed": 55,
+        "relevance": 7,
+        "hoverInfo": "Tracce pubbliche di lavoro e riflessioni.",
+        "previewDescription": "Esperienze, note e micro‑lezioni di rotta."
+      },
+      {
+        "id": "github",
+        "name": "Lab di Esperimenti",
+        "planetType": "social",
+        "url": "https://example.com/lorenzo-amani/lab",
+        "icon": "github",
+        "orbitRadius": 640,
+        "speed": 63,
+        "relevance": 6,
+        "hoverInfo": "Repository di test, template e checklist.",
+        "previewDescription": "Strumenti leggeri per rendere replicabile l’apprendimento."
+      },
+      {
+        "id": "portfolio",
+        "name": "Dossier di Missione",
+        "planetType": "social",
+        "url": "https://example.com/lorenzo-amani",
+        "icon": "portfolio",
+        "orbitRadius": 680,
+        "speed": 70,
+        "relevance": 9,
+        "hoverInfo": "Una mappa di lanci, crash e correzioni.",
+        "previewDescription": "Case story orientate a scelte e lezioni, non a trofei."
+      }
+    ],
+    "lessonsLearned": [
+      {
+        "id": "lesson-mkt-1",
+        "title": "Il Lancio nel Vuoto",
+        "year": 2021,
+        "incidentReport": "Abbiamo costruito una campagna “perfetta”: visual stupendi, claim brillanti, KPI ambiziosi. Il pubblico non ha reagito. Avevamo parlato di noi, non di loro.",
+        "lessonExtracted": "Ora inizio dal linguaggio del pubblico: interviste, note di chiamata, obiezioni reali. Se non so ripetere i loro problemi con le loro parole, non sono pronto a lanciare.",
+        "quote": "“Il mercato non ti deve niente.”",
+        "orbitRadius": 520,
+        "speed": 40,
+        "relevance": 9,
+        "hoverInfo": "Il silenzio è un dato, non un’offesa."
+      },
+      {
+        "id": "lesson-mkt-2",
+        "title": "Metriche come Specchi",
+        "year": 2023,
+        "incidentReport": "Per mesi abbiamo ottimizzato click e CTR. Le dashboard erano verdi, ma i clienti arrivavano confusi e il churn cresceva.",
+        "lessonExtracted": "Ho imparato a scegliere pochi indicatori legati a fiducia e valore percepito. Meglio una metrica che cambia comportamenti che dieci che cambiano solo slide.",
+        "quote": "“Non tutto ciò che conta si conta bene.”",
+        "orbitRadius": 560,
+        "speed": 44,
+        "relevance": 8,
+        "hoverInfo": "Le metriche guidano: scegli le giuste o ti guideranno male."
+      }
+    ],
+    "projects": [
+      {
+        "id": 1,
+        "title": "Missione: Segnali dal Mercato",
+        "skillId": 1,
+        "description": "Costruzione di un sistema leggero per catturare insight: interviste, call note, survey brevi e sintesi condivisa.",
+        "outcome": "Meno dibattiti basati su opinioni, più scelte basate su frasi reali dei clienti.",
+        "tags": ["insight", "ricerca", "posizionamento", "ascolto"]
+      },
+      {
+        "id": 2,
+        "title": "Missione: Esperimenti in Micro‑Orbita",
+        "skillId": 2,
+        "description": "Framework per test rapidi: ipotesi, messaggio, canale, criterio di stop e lezione registrata.",
+        "outcome": "Velocità senza caos: il team ha iniziato a imparare ogni settimana, non ogni quarter.",
+        "tags": ["sperimentazione", "learning", "priorità", "ritmo"]
+      },
+      {
+        "id": 3,
+        "title": "Missione: Manuale di Linguaggio",
+        "skillId": 3,
+        "description": "Allineamento tono e promessa: parole coerenti tra sito, sales e prodotto, con esempi e anti‑esempi.",
+        "outcome": "Messaggi più chiari e meno frizione tra reparti: la stessa storia, raccontata bene.",
+        "tags": ["messaggi", "coerenza", "brand", "chiarezza"]
+      },
+      {
+        "id": 4,
+        "title": "Missione: Bussola di Focus",
+        "skillId": 7,
+        "description": "Definizione di “cosa non fare”: canali esclusi, priorità per trimestre e motivazioni scritte.",
+        "outcome": "Risorse concentrate: meno dispersione, più continuità e risultati leggibili.",
+        "tags": ["strategia", "scelte", "no", "allineamento"]
+      }
+    ],
+    "failure": {
+      "title": "La Promessa Troppo Grande",
+      "lesson": "Se prometti troppo, costringi il prodotto a inseguire: la fiducia si perde due volte.",
+      "story": "In un periodo di pressione ho approvato un messaggio che suonava eroico ma non era ancora vero. Nel breve ha portato attenzione; nel medio ha creato aspettative impossibili e frustrazione nel team di prodotto. Ho imparato a costruire promesse che possiamo mantenere e a difendere il tempo necessario perché la realtà raggiunga le parole."
+    }
+  },
+  "meta": {
+    "sourceSummary": {
+      "filesCount": 0,
+      "linksCount": 0
+    },
+    "confidence": 0.57,
+    "limitations": [
+      "Profilo dimostrativo generato come esempio: non deriva da CV o link reali.",
+      "I link social puntano a URL di placeholder.",
+      "Outcome e numeri sono descrittivi e orientati alla narrazione, non audit esterni."
+    ]
+  }
+}

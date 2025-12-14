@@ -1,0 +1,224 @@
+{
+  "version": "1.0",
+  "generatedAt": "2025-12-14T10:00:00.000Z",
+  "userData": {
+    "name": "Mina Kovács",
+    "role": "Architetta di Esperienze in Gravità Variabile",
+    "theme": "design",
+    "manifesto": "Non progetto schermi: progetto scelte. Mi interessa come una persona si sente quando tutto è complesso e il tempo è poco.",
+    "identityNegations": [
+      "Non sono i miei [[mockup]] più belli.",
+      "Non sono il mio [[tool]] preferito.",
+      "Non sono la mia [[estetica]]: sono la mia responsabilità verso chi usa.",
+      "Io non sono un [[pixel]]: sono un modo di ascoltare.",
+      "Non sono il mio [[portfolio]]: sono le decisioni difficili che ho imparato a prendere."
+    ],
+    "backgroundAudio": {
+      "trackId": "neon_orbit_synthwave",
+      "volume": 0.3
+    },
+    "core": "Riduzione",
+    "coreDescription": "Togliere fino a far emergere ciò che conta: meno attrito, più comprensione, più dignità per chi attraversa il flusso.",
+    "skills": [
+      {
+        "id": 1,
+        "name": "Prototipare per capire",
+        "type": "design",
+        "planetType": "skill",
+        "level": 90,
+        "orbitRadius": 220,
+        "speed": 34,
+        "description": "Uso prototipi come strumenti di verità: faccio emergere dubbi e vincoli prima di innamorarmi della soluzione.",
+        "relevance": 10,
+        "hoverInfo": "Il prototipo non serve a convincere: serve a scoprire."
+      },
+      {
+        "id": 2,
+        "name": "Ricerca sul campo",
+        "type": "design",
+        "planetType": "skill",
+        "level": 86,
+        "orbitRadius": 260,
+        "speed": 40,
+        "description": "Osservo persone reali in contesti reali: quello che dicono, fanno, evitano e temono.",
+        "relevance": 9,
+        "hoverInfo": "Le risposte cambiano quando cambi la stanza."
+      },
+      {
+        "id": 3,
+        "name": "Sistemi che reggono",
+        "type": "design",
+        "planetType": "skill",
+        "level": 82,
+        "orbitRadius": 300,
+        "speed": 46,
+        "description": "Creo regole e componenti come infrastrutture: coerenza, manutenzione e scalabilità della UI.",
+        "relevance": 8,
+        "hoverInfo": "Un sistema è un accordo tra persone, non una libreria."
+      },
+      {
+        "id": 4,
+        "name": "Accessibilità come default",
+        "type": "design",
+        "planetType": "skill",
+        "level": 80,
+        "orbitRadius": 340,
+        "speed": 52,
+        "description": "Progetto per più corpi, più occhi, più tempi: non come extra, ma come qualità di base.",
+        "relevance": 8,
+        "hoverInfo": "Se qualcuno resta fuori, il design non è finito."
+      },
+      {
+        "id": 5,
+        "name": "Facilitare decisioni",
+        "type": "design",
+        "planetType": "skill",
+        "level": 78,
+        "orbitRadius": 380,
+        "speed": 58,
+        "description": "Conduco sessioni dove il team vede gli stessi trade‑off e sceglie insieme: meno ping‑pong, più chiarezza.",
+        "relevance": 7,
+        "hoverInfo": "Un buon workshop è un acceleratore di allineamento."
+      },
+      {
+        "id": 6,
+        "name": "Microcopy che guida",
+        "type": "design",
+        "planetType": "skill",
+        "level": 76,
+        "orbitRadius": 420,
+        "speed": 62,
+        "description": "Scrivo testi brevi che riducono ansia e ambiguità: errori, stati vuoti, scelte irreversibili.",
+        "relevance": 6,
+        "hoverInfo": "Le parole sono parte dell’interfaccia."
+      },
+      {
+        "id": 7,
+        "name": "Empatia sotto vincoli",
+        "type": "design",
+        "planetType": "skill",
+        "level": 84,
+        "orbitRadius": 460,
+        "speed": 68,
+        "description": "Quando budget e tempo stringono, scelgo ciò che salva l’esperienza: dignità, comprensione, controllo.",
+        "relevance": 9,
+        "hoverInfo": "Vincoli forti, rispetto più forte."
+      }
+    ],
+    "socialLinks": [
+      {
+        "id": "linkedin",
+        "name": "LinkedIn",
+        "planetType": "social",
+        "url": "https://example.com/mina-kovacs/linkedin",
+        "icon": "linkedin",
+        "orbitRadius": 610,
+        "speed": 55,
+        "relevance": 7,
+        "hoverInfo": "Percorso e note pubbliche di missione.",
+        "previewDescription": "Esperienze, articoli brevi e riflessioni sul mestiere."
+      },
+      {
+        "id": "github",
+        "name": "Playground",
+        "planetType": "social",
+        "url": "https://example.com/mina-kovacs/playground",
+        "icon": "github",
+        "orbitRadius": 640,
+        "speed": 63,
+        "relevance": 6,
+        "hoverInfo": "Esperimenti e prototipi condivisi.",
+        "previewDescription": "Piccoli prototipi, pattern, note di accessibilità."
+      },
+      {
+        "id": "portfolio",
+        "name": "Atlas",
+        "planetType": "social",
+        "url": "https://example.com/mina-kovacs",
+        "icon": "portfolio",
+        "orbitRadius": 680,
+        "speed": 70,
+        "relevance": 9,
+        "hoverInfo": "Mappa navigabile di scelte e lezioni.",
+        "previewDescription": "Case story che mostrano decisioni e compromessi, non solo output."
+      }
+    ],
+    "lessonsLearned": [
+      {
+        "id": "lesson-design-1",
+        "title": "Il Prototipo Troppo Bello",
+        "year": 2020,
+        "incidentReport": "Ho presentato un prototipo rifinito che ha convinto tutti. In sviluppo sono emersi vincoli tecnici e tempi: la soluzione era irrealistica e il team si è sentito tradito.",
+        "lessonExtracted": "Da allora prototipo “con onestà”: evidenzio rischi, zone grigie e alternative. Un prototipo deve accelerare la verità, non nasconderla.",
+        "quote": "“Elegante non vuol dire vero.”",
+        "orbitRadius": 520,
+        "speed": 40,
+        "relevance": 9,
+        "hoverInfo": "Se sembra magia, probabilmente manca un vincolo." 
+      },
+      {
+        "id": "lesson-design-2",
+        "title": "La Scorciatoia sull’Accessibilità",
+        "year": 2022,
+        "incidentReport": "In un progetto urgente abbiamo rimandato controlli di accessibilità. Dopo il rilascio sono arrivate segnalazioni: persone bloccate in passaggi critici.",
+        "lessonExtracted": "Ho imparato che l’accessibilità non è un “dopo”. Ora definisco requisiti minimi e test rapidi fin dall’inizio, anche quando la gravità aumenta.",
+        "quote": "“Se qualcuno non può usarlo, non è finito.”",
+        "orbitRadius": 560,
+        "speed": 44,
+        "relevance": 8,
+        "hoverInfo": "L’urgenza non giustifica l’esclusione." 
+      }
+    ],
+    "projects": [
+      {
+        "id": 1,
+        "title": "Missione: Corridoi di Bordo",
+        "skillId": 6,
+        "description": "Riprogettazione di stati vuoti, errori e microcopy per ridurre ansia e ambiguità nei flussi più delicati.",
+        "outcome": "Meno richieste di supporto e più autonomia: le persone capiscono cosa succede e cosa fare dopo.",
+        "tags": ["microcopy", "error states", "chiarezza", "fiducia"]
+      },
+      {
+        "id": 2,
+        "title": "Missione: Sistema di Costellazioni",
+        "skillId": 3,
+        "description": "Creazione di un sistema di regole e componenti condivisi, pensato per evolvere con il team.",
+        "outcome": "Coerenza senza rigidità: meno attrito tra design e sviluppo.",
+        "tags": ["design system", "coerenza", "manutenzione", "scalabilità"]
+      },
+      {
+        "id": 3,
+        "title": "Missione: Interviste in Gravità Zero",
+        "skillId": 2,
+        "description": "Ciclo di ricerca leggera: osservazione, sintesi e insight collegati a decisioni di roadmap.",
+        "outcome": "Decisioni più umane: il team ha iniziato a citare persone, non preferenze.",
+        "tags": ["ricerca", "insight", "priorità", "empatia"]
+      },
+      {
+        "id": 4,
+        "title": "Missione: Tavolo di Comando",
+        "skillId": 5,
+        "description": "Facilitazione di workshop per scegliere trade‑off e definire criteri di successo condivisi.",
+        "outcome": "Meno conflitti latenti: le scelte diventano esplicite e sostenute dal gruppo.",
+        "tags": ["facilitazione", "allineamento", "trade-off", "decisioni"]
+      }
+    ],
+    "failure": {
+      "title": "Il Design come Decreto",
+      "lesson": "Se imponi una soluzione, perdi la squadra: il design deve essere un linguaggio comune, non un verdetto.",
+      "story": "All’inizio della mia carriera ho difeso una soluzione perché era “giusta” secondo me. Ho vinto la discussione, ma ho perso collaborazione: lo sviluppo ha eseguito senza fiducia e il prodotto è uscito fragile. Da allora misuro il successo anche da quante persone capiscono e sostengono una scelta, non solo da quanto è bella."
+    }
+  },
+  "meta": {
+    "sourceSummary": {
+      "filesCount": 0,
+      "linksCount": 0
+    },
+    "confidence": 0.56,
+    "limitations": [
+      "Profilo dimostrativo generato come esempio: non deriva da CV o link reali.",
+      "I link social puntano a URL di placeholder.",
+      "Le storie sono costruite per rappresentare il formato dell’anti‑portfolio."
+    ]
+  }
+}

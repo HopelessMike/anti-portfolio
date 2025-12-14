@@ -4,7 +4,6 @@ import { motion } from "framer-motion"
 import { Linkedin, Github, Globe } from "lucide-react"
 import type { SocialLink } from "@/lib/user-data"
 import { planetColors } from "@/lib/user-data"
-import { buildPlanetBackground, getPlanetAppearance } from "@/lib/planet-appearance"
 
 interface SocialPlanetProps {
   social: SocialLink
@@ -32,18 +31,11 @@ export function SocialPlanet({
   isSystemHovered,
 }: SocialPlanetProps) {
   const colors = planetColors.social[social.icon]
-  const appearance = getPlanetAppearance(`social:${social.id}:${social.name}:${social.icon}`)
-  const size = 22 + (social.relevance / 10) * 44
-  const texture = buildPlanetBackground({
-    base: colors.base,
-    accent: colors.accent,
-    variant: appearance.variant === "tech-grid" ? "tech-grid" : appearance.variant,
-    hueShiftDeg: appearance.hueShiftDeg,
-  })
+  const size = 24 + (social.relevance / 10) * 36
   const Icon = iconMap[social.icon]
 
   const rotationDuration = isSystemHovered ? social.speed * 4 : social.speed
-  const dimOthers = isSystemHovered && !isHovered && !isSelected
+  const ringOpacity = isSelected || isHovered ? 0.55 : 0.14
 
   return (
     <motion.div
@@ -55,6 +47,7 @@ export function SocialPlanet({
         top: "50%",
         marginLeft: -social.orbitRadius,
         marginTop: -social.orbitRadius,
+        zIndex: 20,
       }}
       animate={{ rotate: 360 }}
       transition={{
@@ -65,8 +58,8 @@ export function SocialPlanet({
     >
       {/* Orbit ring */}
       <div
-        className="absolute inset-0 rounded-full border border-dashed border-white/10"
-        style={{ pointerEvents: "none" }}
+        className="absolute inset-0 rounded-full border border-dashed"
+        style={{ pointerEvents: "none", borderColor: `${colors.base}22`, opacity: ringOpacity }}
       />
 
       {/* Planet */}
@@ -79,10 +72,9 @@ export function SocialPlanet({
           top: 0,
           marginLeft: -size / 2,
           marginTop: -size / 2,
-          ...texture,
+          background: `radial-gradient(circle at 30% 30%, ${colors.base} 0%, ${colors.accent} 100%)`,
           boxShadow:
             isSelected || isHovered ? `0 0 40px ${colors.glow}, 0 0 80px ${colors.glow}` : `0 0 15px ${colors.glow}`,
-          opacity: dimOthers ? 0.7 : 1,
         }}
         onClick={onClick}
         onHoverStart={onHoverStart}
@@ -99,12 +91,13 @@ export function SocialPlanet({
         }}
       >
         <div
-          className="absolute inset-0 rounded-full opacity-35"
+          className="absolute inset-0 rounded-full pointer-events-none"
           style={{
-            background: "radial-gradient(circle at 30% 30%, rgba(255,255,255,0.35) 0%, transparent 45%)",
+            background: "radial-gradient(circle at 30% 30%, rgba(255,255,255,0.20) 0%, transparent 55%)",
+            opacity: 0.65,
           }}
         />
-        <Icon className="w-1/2 h-1/2 text-white/90 drop-shadow" />
+        <Icon className="w-1/2 h-1/2 text-white/90" />
       </motion.div>
 
       {/* Hover tooltip */}
@@ -146,7 +139,6 @@ export function SocialPlanet({
             {social.name}
           </p>
           <p className="text-xs text-white/60 mt-0.5">{social.hoverInfo}</p>
-          <p className="text-[11px] text-white/40 mt-1">Click per aprire scheda</p>
         </div>
       </motion.div>
     </motion.div>

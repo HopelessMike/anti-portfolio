@@ -18,234 +18,53 @@ export function CentralSun({ core, coreDescription, theme }: CentralSunProps) {
   return (
     // IMPORTANT: the sun is visually huge; keep halos non-interactive so planets remain clickable.
     <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 pointer-events-none">
-      {/* Light rays / bloom spikes (subtle, premium) */}
+      {/* Core star appearance (as requested): gradient + glow + pulse + expanding ping */}
       <motion.div
-        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none"
-        style={{
-          width: 320,
-          height: 320,
-          filter: "blur(10px)",
-          opacity: 0.55,
-          background: `conic-gradient(
-            from 0deg,
-            transparent 0deg,
-            ${colors.primary}22 18deg,
-            transparent 42deg,
-            ${colors.secondary}18 76deg,
-            transparent 110deg,
-            ${colors.primary}14 150deg,
-            transparent 190deg,
-            ${colors.secondary}18 230deg,
-            transparent 270deg,
-            ${colors.primary}14 310deg,
-            transparent 360deg
-          )`,
-          WebkitMaskImage: "radial-gradient(circle, transparent 0 44%, rgba(0,0,0,1) 52%, rgba(0,0,0,0) 74%)",
-          maskImage: "radial-gradient(circle, transparent 0 44%, rgba(0,0,0,1) 52%, rgba(0,0,0,0) 74%)",
-        }}
-        animate={{ rotate: 360, opacity: [0.35, 0.6, 0.35] }}
-        transition={{
-          rotate: { duration: 30, repeat: Number.POSITIVE_INFINITY, ease: "linear" },
-          opacity: { duration: 4.5, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" },
-        }}
-      />
-
-      {[1, 2, 3, 4, 5].map((ring) => (
-        <motion.div
-          key={ring}
-          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full"
-          style={{
-            width: 120 + ring * 35,
-            height: 120 + ring * 35,
-            background: `radial-gradient(circle, transparent 85%, ${colors.primary}${Math.max(5, 20 - ring * 3).toString(16)} 100%)`,
-            border: `1px solid ${colors.primary}${Math.max(10, 30 - ring * 5).toString(16)}`,
-          }}
-          animate={{
-            scale: [1, 1.05 + ring * 0.02, 1],
-            opacity: [0.4 - ring * 0.05, 0.7 - ring * 0.1, 0.4 - ring * 0.05],
-          }}
-          transition={{
-            duration: 2 + ring * 0.3,
-            repeat: Number.POSITIVE_INFINITY,
-            delay: ring * 0.15,
-            ease: "easeInOut",
-          }}
-        />
-      ))}
-
-      {/* Outer plasma glow */}
-      <motion.div
-        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full"
-        style={{
-          width: 200,
-          height: 200,
-          background: `radial-gradient(circle, ${colors.primary}30 0%, ${colors.secondary}15 40%, transparent 70%)`,
-          filter: "blur(20px)",
-        }}
-        animate={{
-          scale: [0.9, 1.1, 0.9],
-          opacity: [0.5, 0.8, 0.5],
-        }}
-        transition={{
-          duration: 3,
-          repeat: Number.POSITIVE_INFINITY,
-          ease: "easeInOut",
-        }}
-      />
-
-      {/* Rotating conic gradient corona */}
-      <motion.div
-        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full"
-        style={{
-          width: 180,
-          height: 180,
-          background: `conic-gradient(from 0deg, transparent, ${colors.primary}30, transparent, ${colors.secondary}30, transparent)`,
-          filter: "blur(8px)",
-        }}
-        animate={{ rotate: 360 }}
-        transition={{
-          duration: 15,
-          repeat: Number.POSITIVE_INFINITY,
-          ease: "linear",
-        }}
-      />
-
-      {/* Main sun body: premium, textured (less \"billiard ball\") */}
-      <motion.div
-        className="relative w-32 h-32 rounded-full cursor-pointer pointer-events-auto"
-        style={{
-          background: `
-            radial-gradient(circle at 35% 35%, 
-              rgba(255, 255, 255, 0.95) 0%,
-              ${colors.primary} 25%, 
-              ${colors.secondary} 55%, 
-              ${colors.primary}90 100%
-            ),
-            radial-gradient(circle at 70% 75%, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0) 52%),
-            radial-gradient(circle at 25% 80%, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0) 45%),
-            repeating-radial-gradient(circle at 50% 50%, rgba(255,255,255,0.06) 0 1px, rgba(0,0,0,0) 1px 3px)
-          `,
-          boxShadow: `
-            0 0 80px ${colors.primary}90,
-            0 0 150px ${colors.primary}60,
-            0 0 200px ${colors.secondary}40,
-            inset 0 0 60px rgba(255, 255, 255, 0.4)
-          `,
-        }}
-        onHoverStart={() => setIsHovered(true)}
-        onHoverEnd={() => setIsHovered(false)}
-        animate={{
-          boxShadow: [
-            `0 0 80px ${colors.primary}90, 0 0 150px ${colors.primary}60, 0 0 200px ${colors.secondary}40, inset 0 0 60px rgba(255,255,255,0.4)`,
-            `0 0 120px ${colors.primary}99, 0 0 200px ${colors.primary}70, 0 0 280px ${colors.secondary}50, inset 0 0 80px rgba(255,255,255,0.5)`,
-            `0 0 80px ${colors.primary}90, 0 0 150px ${colors.primary}60, 0 0 200px ${colors.secondary}40, inset 0 0 60px rgba(255,255,255,0.4)`,
-          ],
-          scale: [1, 1.02, 1],
-        }}
-        transition={{
-          duration: 2.5,
-          repeat: Number.POSITIVE_INFINITY,
-          ease: "easeInOut",
-        }}
+        className="relative flex items-center justify-center"
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 1, delay: 0.3 }}
+        style={
+          {
+            // Set CSS vars used by glow-primary (and by any future hsl(var(--color-*)) usage)
+            // Keep them as hex because the rest of the app already uses hex in :root.
+            ["--primary" as any]: colors.primary,
+            ["--secondary" as any]: colors.secondary,
+          } as React.CSSProperties
+        }
       >
-        {/* Plasma swirl layer */}
-        <motion.div
-          className="absolute inset-0 rounded-full"
+        {/* Soft bloom (more splendente, not harsh) */}
+        <div
+          className="absolute w-44 h-44 rounded-full"
           style={{
-            background: `
-              conic-gradient(
-                from 180deg,
-                rgba(255,255,255,0.00),
-                ${colors.secondary}1f,
-                rgba(255,255,255,0.00),
-                ${colors.primary}22,
-                rgba(255,255,255,0.00),
-                ${colors.secondary}1a,
-                rgba(255,255,255,0.00)
-              )
-            `,
-            mixBlendMode: "overlay",
-            filter: "blur(1px)",
-            opacity: 0.7,
-          }}
-          animate={{ rotate: -360, opacity: [0.5, 0.8, 0.5] }}
-          transition={{
-            rotate: { duration: 10, repeat: Number.POSITIVE_INFINITY, ease: "linear" },
-            opacity: { duration: 3.2, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" },
+            backgroundImage: `radial-gradient(circle, ${colors.primary}33 0%, ${colors.secondary}22 35%, transparent 70%)`,
+            filter: "blur(18px)",
+            opacity: 0.65,
+            mixBlendMode: "screen",
+            pointerEvents: "none",
           }}
         />
-
-        {/* Sunspots / surface detail */}
-        <motion.div
-          className="absolute inset-0 rounded-full"
+        <div
+          className="absolute w-24 h-24 rounded-full glow-primary animate-[pulse_5.5s_ease-in-out_infinite]"
           style={{
-            background: `
-              radial-gradient(circle at 62% 58%, rgba(0,0,0,0.24) 0%, rgba(0,0,0,0) 22%),
-              radial-gradient(circle at 48% 72%, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0) 18%),
-              radial-gradient(circle at 30% 55%, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0) 16%),
-              radial-gradient(circle at 70% 35%, rgba(255,255,255,0.09) 0%, rgba(255,255,255,0) 24%)
-            `,
-            mixBlendMode: "soft-light",
-            filter: "blur(0.4px) contrast(1.05)",
-            opacity: 0.9,
-          }}
-          animate={{ opacity: [0.7, 1, 0.7] }}
-          transition={{ duration: 5.5, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
-        />
-
-        {/* Grain shimmer (very subtle) */}
-        <motion.div
-          className="absolute inset-0 rounded-full"
-          style={{
-            background:
-              "repeating-radial-gradient(circle at 20% 30%, rgba(255,255,255,0.06) 0 1px, rgba(0,0,0,0) 1px 2px)",
-            mixBlendMode: "overlay",
-            opacity: 0.18,
+            backgroundImage: `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`,
             filter: "blur(0.2px)",
-          }}
-          animate={{ opacity: [0.12, 0.22, 0.12] }}
-          transition={{ duration: 2.2, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
-        />
-
-        {/* Bright spot highlight */}
-        <motion.div
-          className="absolute rounded-full"
-          style={{
-            width: 40,
-            height: 40,
-            left: "20%",
-            top: "20%",
-            background: `radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.3) 50%, transparent 100%)`,
-          }}
-          animate={{
-            opacity: [0.7, 1, 0.7],
-          }}
-          transition={{
-            duration: 2,
-            repeat: Number.POSITIVE_INFINITY,
+            opacity: 0.95,
           }}
         />
-
-        {/* Secondary highlight */}
-        <motion.div
-          className="absolute rounded-full"
-          style={{
-            width: 20,
-            height: 20,
-            right: "25%",
-            bottom: "30%",
-            background: `radial-gradient(circle, rgba(255,255,255,0.5) 0%, transparent 100%)`,
-          }}
+        <div
+          className="absolute w-36 h-36 rounded-full border-2 animate-[ping_6s_ease-out_infinite]"
+          style={{ borderColor: `${colors.primary}1f`, filter: "blur(0.4px)" }}
         />
 
-        {/* Inner rim light */}
+        {/* Hover hit-area only (do not change text or tooltip behavior) */}
         <motion.div
-          className="absolute inset-0 rounded-full pointer-events-none"
-          style={{
-            boxShadow: `inset 0 0 0 1px rgba(255,255,255,0.10), inset 0 0 30px ${colors.primary}22`,
-          }}
-          animate={{ opacity: [0.5, 0.85, 0.5] }}
-          transition={{ duration: 2.8, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
+          className="absolute w-32 h-32 rounded-full cursor-pointer pointer-events-auto"
+          onHoverStart={() => setIsHovered(true)}
+          onHoverEnd={() => setIsHovered(false)}
+          whileHover={{ scale: 1.02 }}
+          transition={{ duration: 0.2 }}
+          style={{ background: "transparent" }}
         />
       </motion.div>
 

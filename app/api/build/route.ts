@@ -62,10 +62,11 @@ async function generateAntiPortfolio(
           `- skills: exactly 7 items\n` +
           `- projects: exactly 4 items\n` +
           `- lessonsLearned: exactly 2 items\n` +
-          `- role: MUST NOT be a real-world job title; it must be a sci-fi mission role (English)\n` +
+          `- role: MUST NOT be a real-world job title; it must be a sci-fi mission role (Italian)\n` +
           `- identityNegations: exactly 5 items (Italian only, each starts with "Non sono" or "Io non sono"; include [[highlight]] markers)\n` +
           `- theme: choose exactly one of tech|marketing|design based on the profile\n` +
           `- name: use the real person name if present in the content; NEVER use placeholder names like "Mario Rossi", "Marco Rossi", "John Doe", "Alex Cosmo"\n` +
+          `- Anti-portfolio rule: skills MUST be human capabilities/principles (NO tool/tech/certification names); projects must read like missions and focus on learning & human impact.\n` +
           `Set meta.sourceSummary.filesCount=${input.filesCount} and meta.sourceSummary.linksCount=${input.linksCount}.\n` +
           `Set generatedAt to current ISO date.\n`,
       },

@@ -1,0 +1,224 @@
+{
+  "version": "1.0",
+  "generatedAt": "2025-12-14T10:00:00.000Z",
+  "userData": {
+    "name": "Giulia Rinaldi",
+    "role": "Cartografa di Sistemi Complessi",
+    "theme": "tech",
+    "manifesto": "Non colleziono stack: colleziono prove. Trasformo incidenti di missione in routine affidabili e condivisibili.",
+    "identityNegations": [
+      "Non sono il mio [[job title]].",
+      "Non sono i miei [[deploy]] riusciti.",
+      "Non sono i miei [[errori]]: li uso come dati.",
+      "Non sono la mia velocità: sono la mia [[costanza]].",
+      "Non sono il mio [[CV]]: sono le mie scelte sotto pressione."
+    ],
+    "backgroundAudio": {
+      "trackId": "signal_glass_glitch",
+      "volume": 0.3
+    },
+    "core": "Affidabilità",
+    "coreDescription": "Rendere il sistema e il team più stabili dopo ogni turbolenza: meno magia, più segnali e responsabilità condivisa.",
+    "skills": [
+      {
+        "id": 1,
+        "name": "Scomporre l’ignoto",
+        "type": "tech",
+        "planetType": "skill",
+        "level": 92,
+        "orbitRadius": 220,
+        "speed": 34,
+        "description": "Quando un problema è troppo grande, lo riduco a ipotesi testabili e a un percorso di investigazione chiaro.",
+        "relevance": 10,
+        "hoverInfo": "Dall’ansia al piano: ipotesi, esperimenti, risultati."
+      },
+      {
+        "id": 2,
+        "name": "Osservare senza panico",
+        "type": "tech",
+        "planetType": "skill",
+        "level": 88,
+        "orbitRadius": 260,
+        "speed": 40,
+        "description": "Creo telemetria utile (non rumorosa) e costruisco abitudini di troubleshooting che non colpevolizzano.",
+        "relevance": 9,
+        "hoverInfo": "Rumore giù, segnale su: capire prima di agire."
+      },
+      {
+        "id": 3,
+        "name": "Scrivere decisioni",
+        "type": "tech",
+        "planetType": "skill",
+        "level": 84,
+        "orbitRadius": 300,
+        "speed": 46,
+        "description": "Documentare trade-off e contesto per evitare che il team ripeta la stessa orbita di errori.",
+        "relevance": 8,
+        "hoverInfo": "Le decisioni vivono meglio se hanno memoria."
+      },
+      {
+        "id": 4,
+        "name": "Ridurre il rischio",
+        "type": "tech",
+        "planetType": "skill",
+        "level": 86,
+        "orbitRadius": 340,
+        "speed": 52,
+        "description": "Spezzo i rilasci, imposto guardrail, faccio rollback senza ego: preferisco piccoli attriti a grandi esplosioni.",
+        "relevance": 9,
+        "hoverInfo": "Rilasci piccoli, confidenza grande."
+      },
+      {
+        "id": 5,
+        "name": "Comunicare in emergenza",
+        "type": "tech",
+        "planetType": "skill",
+        "level": 80,
+        "orbitRadius": 380,
+        "speed": 58,
+        "description": "Durante incidenti traduco impatto e priorità in linguaggio chiaro per team tech e non-tech.",
+        "relevance": 7,
+        "hoverInfo": "Calma, chiarezza, sincronizzazione."
+      },
+      {
+        "id": 6,
+        "name": "Automatizzare il noioso",
+        "type": "tech",
+        "planetType": "skill",
+        "level": 78,
+        "orbitRadius": 420,
+        "speed": 62,
+        "description": "Quando qualcosa si ripete, lo trasformo in procedura o automazione per liberare attenzione per il nuovo.",
+        "relevance": 6,
+        "hoverInfo": "Ripetizione = candidato a procedura."
+      },
+      {
+        "id": 7,
+        "name": "Curare la manutenzione",
+        "type": "tech",
+        "planetType": "skill",
+        "level": 82,
+        "orbitRadius": 460,
+        "speed": 68,
+        "description": "Pago il debito tecnico come si paga l’ossigeno: prima che diventi una crisi.",
+        "relevance": 8,
+        "hoverInfo": "La manutenzione è una scelta di libertà futura."
+      }
+    ],
+    "socialLinks": [
+      {
+        "id": "linkedin",
+        "name": "LinkedIn",
+        "planetType": "social",
+        "url": "https://example.com/giulia-rinaldi/linkedin",
+        "icon": "linkedin",
+        "orbitRadius": 610,
+        "speed": 55,
+        "relevance": 7,
+        "hoverInfo": "Coordinate professionali e traiettoria pubblica.",
+        "previewDescription": "Timeline, esperienze e contesto di missione."
+      },
+      {
+        "id": "github",
+        "name": "GitHub",
+        "planetType": "social",
+        "url": "https://example.com/giulia-rinaldi/github",
+        "icon": "github",
+        "orbitRadius": 640,
+        "speed": 63,
+        "relevance": 8,
+        "hoverInfo": "Tracce di esperimenti e manutenzione continua.",
+        "previewDescription": "Repository, note di design e piccoli esperimenti replicabili."
+      },
+      {
+        "id": "portfolio",
+        "name": "Log di Missione",
+        "planetType": "social",
+        "url": "https://example.com/giulia-rinaldi",
+        "icon": "portfolio",
+        "orbitRadius": 680,
+        "speed": 70,
+        "relevance": 9,
+        "hoverInfo": "Un riassunto navigabile delle missioni.",
+        "previewDescription": "Una mappa breve di scelte, incidenti e lezioni estratte."
+      }
+    ],
+    "lessonsLearned": [
+      {
+        "id": "lesson-tech-1",
+        "title": "Telemetria Fantasma",
+        "year": 2022,
+        "incidentReport": "Durante un picco di traffico il sistema è andato in stallo. I log erano pieni di messaggi inutili, mancavano metriche chiave e ogni squadra vedeva una versione diversa della verità.",
+        "lessonExtracted": "L’osservabilità non è un tool: è un patto. Ho introdotto segnali minimi condivisi (SLO, metriche d’impatto, runbook) e rituali di post‑incident senza colpe.",
+        "quote": "“Se non lo misuri, lo stai solo sperando.”",
+        "orbitRadius": 520,
+        "speed": 40,
+        "relevance": 9,
+        "hoverInfo": "Quando il segnale è chiaro, la calma arriva." 
+      },
+      {
+        "id": "lesson-tech-2",
+        "title": "Il Rilascio Unico",
+        "year": 2023,
+        "incidentReport": "Una release “tutto insieme” ha rotto una dipendenza critica. Il rollback era manuale, lento, e il team ha perso ore a rincorrere sintomi.",
+        "lessonExtracted": "Ho imparato a progettare il rilascio come parte del prodotto: feature flag, rollout progressivo, rollback automatico e checklist di rischio prima del decollo.",
+        "quote": "“La velocità senza freni è solo un altro modo di cadere.”",
+        "orbitRadius": 560,
+        "speed": 44,
+        "relevance": 8,
+        "hoverInfo": "Rilasciare è una disciplina, non un evento." 
+      }
+    ],
+    "projects": [
+      {
+        "id": 1,
+        "title": "Missione: Scudo di Rientro",
+        "skillId": 4,
+        "description": "Riprogettazione del processo di rilascio per ridurre i rischi: piccoli step, guardrail e piani di fuga chiari.",
+        "outcome": "Meno incidenti “a sorpresa” e più serenità: il team ha iniziato a spedire spesso senza tremare.",
+        "tags": ["rilasci", "risk management", "runbook", "confidenza"]
+      },
+      {
+        "id": 2,
+        "title": "Missione: Radar di Impatto",
+        "skillId": 2,
+        "description": "Definizione di segnali minimi per capire cosa sta succedendo davvero quando qualcosa degrada.",
+        "outcome": "Diagnosi più rapide perché tutti guardano gli stessi indicatori, non le opinioni.",
+        "tags": ["telemetria", "SLO", "incident response", "chiarezza"]
+      },
+      {
+        "id": 3,
+        "title": "Missione: Diario delle Decisioni",
+        "skillId": 3,
+        "description": "Creazione di un archivio leggero di decisioni tecniche con contesto, trade‑off e “quando rivederle”.",
+        "outcome": "Meno discussioni circolari e onboarding più rapido: il perché resta visibile.",
+        "tags": ["documentazione", "trade-off", "memoria", "allineamento"]
+      },
+      {
+        "id": 4,
+        "title": "Missione: Autopilota per il Ripetitivo",
+        "skillId": 6,
+        "description": "Trasformare compiti ripetitivi in procedure e automazioni, per proteggere tempo e attenzione.",
+        "outcome": "Più spazio mentale per il lavoro profondo e meno “micro‑crisi” quotidiane.",
+        "tags": ["automazione", "processi", "focus", "manutenzione"]
+      }
+    ],
+    "failure": {
+      "title": "La Notte della Deriva",
+      "lesson": "Quando tutti corrono, la prima cura è rallentare e tornare ai dati condivisi.",
+      "story": "In una migrazione ho sottovalutato un vincolo “invisibile” tra servizi. Ho chiesto al team di accelerare per rispettare una data simbolica e abbiamo pagato con ore di downtime e stress. L’errore non è stato tecnico: è stato decisionale. Da allora non negozio mai senza mettere sul tavolo rischio, rollback e impatto umano. Se la rotta non è sicura, rimando il lancio."
+    }
+  },
+  "meta": {
+    "sourceSummary": {
+      "filesCount": 0,
+      "linksCount": 0
+    },
+    "confidence": 0.58,
+    "limitations": [
+      "Profilo dimostrativo generato come esempio: non deriva da CV o link reali.",
+      "I link social puntano a URL di placeholder.",
+      "Le metriche di outcome sono qualitative e narrative, non misurazioni certificate."
+    ]
+  }
+}

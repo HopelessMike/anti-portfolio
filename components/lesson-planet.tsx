@@ -37,6 +37,7 @@ export function LessonPlanet({
 
   const rotationDuration = isSystemHovered ? lesson.speed * 4 : lesson.speed
   const dimOthers = isSystemHovered && !isHovered && !isSelected
+  const ringOpacity = isSelected || isHovered ? 0.6 : 0.14
 
   return (
     <motion.div
@@ -48,6 +49,7 @@ export function LessonPlanet({
         top: "50%",
         marginLeft: -lesson.orbitRadius,
         marginTop: -lesson.orbitRadius,
+        zIndex: 20,
       }}
       animate={{ rotate: -360 }}
       transition={{
@@ -58,8 +60,8 @@ export function LessonPlanet({
     >
       {/* Orbit ring - danger dashed */}
       <div
-        className="absolute inset-0 rounded-full border-2 border-dashed border-red-500/20"
-        style={{ pointerEvents: "none" }}
+        className="absolute inset-0 rounded-full border-2 border-dashed"
+        style={{ pointerEvents: "none", borderColor: `${colors.base}33`, opacity: ringOpacity }}
       />
 
       {/* Planet with danger styling */}

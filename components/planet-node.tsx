@@ -3,7 +3,6 @@
 import { motion } from "framer-motion"
 import type { Skill } from "@/lib/user-data"
 import { planetColors } from "@/lib/user-data"
-import { buildPlanetBackground, getPlanetAppearance } from "@/lib/planet-appearance"
 
 interface PlanetNodeProps {
   skill: Skill
@@ -25,17 +24,12 @@ export function PlanetNode({
   isSystemHovered,
 }: PlanetNodeProps) {
   const colors = planetColors.skill[skill.type]
-  const appearance = getPlanetAppearance(`skill:${skill.id}:${skill.name}:${skill.type}`)
-  const size = 22 + (skill.relevance / 10) * 44 + (skill.level / 100) * 8
-  const texture = buildPlanetBackground({
-    base: colors.base,
-    accent: colors.accent,
-    variant: appearance.variant,
-    hueShiftDeg: appearance.hueShiftDeg,
-  })
+  const size = 24 + (skill.relevance / 10) * 36
 
   const rotationDuration = isSystemHovered ? skill.speed * 4 : skill.speed
-  const dimOthers = isSystemHovered && !isHovered && !isSelected
+  const ringOpacity = isSelected || isHovered ? 0.55 : 0.12
+  const texX = 30 + ((skill.id * 17) % 40)
+  const texY = 28 + ((skill.id * 29) % 40)
 
   return (
     <motion.div
@@ -47,6 +41,7 @@ export function PlanetNode({
         top: "50%",
         marginLeft: -skill.orbitRadius,
         marginTop: -skill.orbitRadius,
+        zIndex: 20,
       }}
       animate={{ rotate: 360 }}
       transition={{
@@ -56,7 +51,14 @@ export function PlanetNode({
       }}
     >
       {/* Orbit ring */}
-      <div className="absolute inset-0 rounded-full border border-white/5" style={{ pointerEvents: "none", opacity: dimOthers ? 0.35 : 1 }} />
+      <div
+        className="absolute inset-0 rounded-full border"
+        style={{
+          pointerEvents: "none",
+          borderColor: `${colors.base}22`,
+          opacity: ringOpacity,
+        }}
+      />
 
       {/* Planet */}
       <motion.div
@@ -68,12 +70,13 @@ export function PlanetNode({
           top: 0,
           marginLeft: -size / 2,
           marginTop: -size / 2,
-          ...texture,
+          background: `
+            radial-gradient(circle at 30% 30%, ${colors.base}ff 0%, ${colors.accent}ff 50%, ${colors.base}aa 100%)
+          `,
           boxShadow:
             isSelected || isHovered
               ? `0 0 40px ${colors.glow}, 0 0 80px ${colors.glow}, inset 0 0 20px rgba(255,255,255,0.3)`
               : `0 0 15px ${colors.glow}, inset 0 0 10px rgba(255,255,255,0.1)`,
-          opacity: dimOthers ? 0.7 : 1,
         }}
         onClick={onClick}
         onHoverStart={onHoverStart}
@@ -99,13 +102,23 @@ export function PlanetNode({
           style={{
             background: `
               repeating-radial-gradient(
-                circle at 60% 40%,
+                circle at ${texX}% ${texY}%,
                 transparent 0px,
                 transparent 2px,
                 rgba(255,255,255,0.1) 2px,
                 rgba(255,255,255,0.1) 4px
               )
             `,
+          }}
+        />
+
+        {/* Secondary micro-texture (subtle, gives variation) */}
+        <div
+          className="absolute inset-0 rounded-full pointer-events-none"
+          style={{
+            background: `radial-gradient(circle at ${Math.max(10, texY - 10)}% ${Math.min(90, texX + 15)}%, rgba(255,255,255,0.10) 0%, transparent 45%)`,
+            opacity: 0.35,
+            mixBlendMode: "overlay",
           }}
         />
 
@@ -123,20 +136,6 @@ export function PlanetNode({
             repeat: Number.POSITIVE_INFINITY,
           }}
         />
-
-        {/* Optional ring (inside planet, subtle) */}
-        {appearance.hasRing && (
-          <div
-            className="absolute inset-0 rounded-full"
-            style={{
-              transform: `rotate(${appearance.ringTiltDeg}deg)`,
-              background:
-                "radial-gradient(closest-side, transparent 58%, rgba(255,255,255,0.14) 60%, rgba(255,255,255,0.04) 66%, transparent 72%)",
-              opacity: 0.6,
-              mixBlendMode: "screen",
-            }}
-          />
-        )}
       </motion.div>
 
       <motion.div
@@ -177,7 +176,6 @@ export function PlanetNode({
             {skill.name}
           </p>
           <p className="text-xs text-white/60 mt-0.5">{skill.hoverInfo}</p>
-          <p className="text-[11px] text-white/40 mt-1">Click per aprire scheda</p>
         </div>
       </motion.div>
     </motion.div>

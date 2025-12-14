@@ -3,18 +3,19 @@
 import { useEffect, useMemo, useState } from "react"
 import type { ReactNode } from "react"
 import { createPortal } from "react-dom"
-import { X, ExternalLink, Calendar, Tag, AlertTriangle, Link as LinkIcon } from "lucide-react"
+import { X, ExternalLink, Calendar, Tag, AlertTriangle, Link as LinkIcon, Sparkles, Orbit, Rocket } from "lucide-react"
 import { motion } from "framer-motion"
-import type { Failure, LessonLearned, Project, Skill, SocialLink, ThemeType } from "@/lib/user-data"
-import { planetColors } from "@/lib/user-data"
+import type { Failure, LessonLearned, Project, Skill, SocialLink, ThemeType, UserData } from "@/lib/user-data"
+import { planetColors, themeColors } from "@/lib/user-data"
 import { getAccentForFailure } from "@/lib/planet-appearance"
-
-type PanelType = "skill" | "social" | "lesson" | "failure"
 
 type PanelItem =
   | { type: "skill"; data: Skill; relatedProjects: Project[] }
+  | { type: "project"; data: Project; skill: Skill | null }
   | { type: "social"; data: SocialLink }
   | { type: "lesson"; data: LessonLearned }
+  | { type: "core"; data: UserData }
+  | { type: "identity"; data: { id: string; text: string } }
   | { type: "failure"; data: Failure }
 
 interface ProjectPanelProps {
@@ -49,11 +50,19 @@ export function ProjectPanel({ isOpen, onClose, item, theme }: ProjectPanelProps
       const c = planetColors.skill[item.data.type]
       return { primary: c.base, secondary: c.accent }
     }
+    if (item.type === "project") {
+      const c = themeColors[theme]
+      return { primary: c.primary, secondary: c.secondary }
+    }
     if (item.type === "social") {
       const c = planetColors.social[item.data.icon]
       return { primary: c.base, secondary: c.accent }
     }
     if (item.type === "lesson") return { primary: planetColors.lesson.base, secondary: planetColors.lesson.accent }
+    if (item.type === "core" || item.type === "identity") {
+      const c = themeColors[theme]
+      return { primary: c.primary, secondary: c.secondary }
+    }
     const c = getAccentForFailure(theme)
     return { primary: c.base, secondary: c.accent }
   }, [item, theme])
@@ -61,24 +70,33 @@ export function ProjectPanel({ isOpen, onClose, item, theme }: ProjectPanelProps
   const label = useMemo(() => {
     if (!item) return "MISSION FILE"
     if (item.type === "skill") return "SKILL MATRIX"
+    if (item.type === "project") return "MISSION CAPSULE"
     if (item.type === "social") return "EXTERNAL LINK"
     if (item.type === "lesson") return "CRITICAL EVENT LOG"
+    if (item.type === "core") return "CORE SIGNAL"
+    if (item.type === "identity") return "IDENTITY CONSTELLATION"
     return "ANOMALY REPORT"
   }, [item])
 
   const title = useMemo(() => {
     if (!item) return ""
     if (item.type === "skill") return item.data.name
+    if (item.type === "project") return item.data.title
     if (item.type === "social") return item.data.name
     if (item.type === "lesson") return item.data.title
+    if (item.type === "core") return item.data.core
+    if (item.type === "identity") return "Non sono..."
     return item.data.title
   }, [item])
 
   const description = useMemo(() => {
     if (!item) return ""
     if (item.type === "skill") return item.data.description
+    if (item.type === "project") return item.data.description
     if (item.type === "social") return item.data.previewDescription
     if (item.type === "lesson") return item.data.lessonExtracted
+    if (item.type === "core") return item.data.coreDescription
+    if (item.type === "identity") return item.data.text
     return item.data.lesson
   }, [item])
 
@@ -131,8 +149,11 @@ export function ProjectPanel({ isOpen, onClose, item, theme }: ProjectPanelProps
           {item?.type === "skill" && (
             <SkillPanel skill={item.data} projects={item.relatedProjects} primary={colors.primary} secondary={colors.secondary} />
           )}
+          {item?.type === "project" && <ProjectMoonPanel project={item.data} skill={item.skill} primary={colors.primary} secondary={colors.secondary} />}
           {item?.type === "social" && <SocialPanel social={item.data} primary={colors.primary} secondary={colors.secondary} />}
           {item?.type === "lesson" && <LessonPanel lesson={item.data} primary={colors.primary} secondary={colors.secondary} />}
+          {item?.type === "core" && <CorePanel userData={item.data} primary={colors.primary} secondary={colors.secondary} />}
+          {item?.type === "identity" && <IdentityPanel text={item.data.text} primary={colors.primary} secondary={colors.secondary} />}
           {item?.type === "failure" && <FailurePanel failure={item.data} primary={colors.primary} secondary={colors.secondary} />}
         </div>
       </div>
@@ -146,6 +167,61 @@ function Card({ children, borderColor, bg }: { children: ReactNode; borderColor:
   return (
     <div className="border rounded-lg p-6" style={{ borderColor, background: bg }}>
       {children}
+    </div>
+  )
+}
+
+function CorePanel({ userData, primary, secondary }: { userData: UserData; primary: string; secondary: string }) {
+  return (
+    <div className="space-y-6">
+      <Card borderColor={`${primary}44`} bg="rgba(0,0,0,0.25)">
+        <div className="flex items-center gap-2 text-sm text-white/50 mb-2">
+          <Orbit className="h-4 w-4" />
+          <span>MISSION ROLE</span>
+        </div>
+        <div className="text-white text-lg">{userData.role}</div>
+      </Card>
+
+      <Card borderColor={`${secondary}44`} bg={`${secondary}12`}>
+        <div className="flex items-center gap-2 text-sm text-white/50 mb-3">
+          <Sparkles className="h-4 w-4" />
+          <span>MANIFESTO</span>
+        </div>
+        <p className="text-white/90 leading-relaxed italic">"{userData.manifesto}"</p>
+      </Card>
+
+      <Card borderColor="rgba(255,255,255,0.10)" bg="rgba(255,255,255,0.03)">
+        <div className="text-sm text-white/50 mb-4">IDENTITY NEGATIONS</div>
+        <div className="space-y-2">
+          {(userData.identityNegations || []).slice(0, 8).map((line, idx) => (
+            <div key={idx} className="text-sm text-white/75">
+              • {line}
+            </div>
+          ))}
+        </div>
+      </Card>
+    </div>
+  )
+}
+
+function IdentityPanel({ text, primary, secondary }: { text: string; primary: string; secondary: string }) {
+  return (
+    <div className="space-y-6">
+      <Card borderColor={`${secondary}44`} bg={`${secondary}10`}>
+        <div className="flex items-center gap-2 text-sm text-white/50 mb-3">
+          <Sparkles className="h-4 w-4" />
+          <span>IDENTITY SIGNAL</span>
+        </div>
+        <p className="text-white/90 leading-relaxed">{text}</p>
+      </Card>
+
+      <Card borderColor="rgba(255,255,255,0.10)" bg="rgba(255,255,255,0.03)">
+        <div className="text-sm text-white/50 mb-3">WHY IT MATTERS</div>
+        <p className="text-white/70 leading-relaxed">
+          Nell’Anti‑Portfolio queste frasi non sono decorazioni: sono coordinate. Dicono cosa <span style={{ color: primary }}>non</span> definisce la persona,
+          così diventa più chiaro cosa invece la muove davvero.
+        </p>
+      </Card>
     </div>
   )
 }
@@ -202,6 +278,64 @@ function SkillPanel({
           </div>
         </Card>
       )}
+    </div>
+  )
+}
+
+function ProjectMoonPanel({
+  project,
+  skill,
+  primary,
+  secondary,
+}: {
+  project: Project
+  skill: Skill | null
+  primary: string
+  secondary: string
+}) {
+  return (
+    <div className="space-y-6">
+      {skill && (
+        <Card borderColor={`${primary}44`} bg="rgba(0,0,0,0.25)">
+          <div className="flex items-center gap-2 text-sm text-white/50 mb-2">
+            <Tag className="h-4 w-4" />
+            <span>CONNECTED SKILL</span>
+          </div>
+          <div className="text-white text-lg">{skill.name}</div>
+        </Card>
+      )}
+
+      <Card borderColor="rgba(255,255,255,0.10)" bg="rgba(255,255,255,0.03)">
+        <div className="flex items-center gap-2 text-sm text-white/50 mb-3">
+          <Rocket className="h-4 w-4" />
+          <span>MISSION OUTCOME</span>
+        </div>
+        <p className="text-white/85 leading-relaxed">{project.outcome || "Outcome non specificato (dato mancante nel profilo)."}</p>
+      </Card>
+
+      {project.tags?.length > 0 && (
+        <Card borderColor="rgba(255,255,255,0.10)" bg="rgba(255,255,255,0.03)">
+          <div className="text-sm text-white/50 mb-4">TAGS</div>
+          <div className="flex flex-wrap gap-2">
+            {project.tags.map((t) => (
+              <span
+                key={t}
+                className="px-3 py-1 rounded-full text-sm"
+                style={{ background: `${primary}22`, border: `1px solid ${primary}33` }}
+              >
+                {t}
+              </span>
+            ))}
+          </div>
+        </Card>
+      )}
+
+      <Card borderColor={`${secondary}44`} bg={`${secondary}10`}>
+        <div className="text-sm mb-3" style={{ color: secondary }}>
+          DESCRIPTION
+        </div>
+        <p className="text-white/85 leading-relaxed">{project.description}</p>
+      </Card>
     </div>
   )
 }
