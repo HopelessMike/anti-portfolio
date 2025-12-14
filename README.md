@@ -1,11 +1,12 @@
 # Anti-Portfolio (Next.js) — Integrated App
 
-Questa cartella contiene la **webapp principale** (Next.js) che unifica:
+Webapp **Next.js (App Router)** che genera un “anti‑portfolio” interattivo in stile cosmico partendo da CV/link (e opzionalmente un briefing).
 
-- onboarding (upload CV + link)
-- analisi AI + generazione dati anti-portfolio
-- rendering “cosmico”
-- download **Flight Log** `.json` (ri-caricabile dalla home)
+Funzionalità principali:
+- **Onboarding**: upload PDF + link + briefing
+- **Analisi AI**: estrazione/riassunto e generazione di un `Flight Log` JSON (con regole anti‑invenzione)
+- **Render**: sistema solare 2D con nodi cliccabili e pannello dettagli
+- **Export/Import**: download e ricarica del `flight-log.json`
 
 ## Requisiti
 
@@ -19,20 +20,21 @@ npm install
 npm run dev
 ```
 
-Apri:
+## Rotte principali
 
-- `http://localhost:3000/` (landing)
-- `http://localhost:3000/onboarding` (upload + genera)
-- `http://localhost:3000/anti-portfolio` (render)
+- `/` landing + import del Flight Log
+- `/onboarding` flusso di generazione (upload/link/briefing)
+- `/anti-portfolio` render della visualizzazione interattiva
+- `/portfolio` redirect legacy a `/anti-portfolio`
 
 ## API
 
 - `POST /api/build`
-  - input: multipart `files[]` (PDF) + `links` (JSON array string)
-  - output: `AntiPortfolioData`
+  - **input**: multipart `files[]` (PDF), `links` (string JSON array), `briefing` (string opzionale)
+  - **output**: `AntiPortfolioData` (Flight Log validato)
 
 ## Flight Log (.json)
 
-- In `/portfolio` il bottone **DOWNLOAD FLIGHT LOG** scarica `flight-log.json`.
-- Nella home (`/`) puoi usare **Carica Flight Log (.json)** per ricaricarlo e riaprire il portfolio.
+- In `/anti-portfolio` il bottone **DOWNLOAD FLIGHT LOG** scarica `flight-log.json`.
+- Nella home (`/`) puoi usare **Carica Flight Log (.json)** per ricaricarlo e riaprire l’anti‑portfolio.
 

@@ -17,7 +17,8 @@ export function CentralSun({ core, coreDescription, theme }: CentralSunProps) {
 
   return (
     // IMPORTANT: the sun is visually huge; keep halos non-interactive so planets remain clickable.
-    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 pointer-events-none">
+    // NOTE: z-index must be above orbit wrappers so the core tooltip never gets covered by planets.
+    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-40 pointer-events-none">
       {/* Core star appearance (as requested): gradient + glow + pulse + expanding ping */}
       <motion.div
         className="relative flex items-center justify-center"
@@ -30,16 +31,29 @@ export function CentralSun({ core, coreDescription, theme }: CentralSunProps) {
             // Keep them as hex because the rest of the app already uses hex in :root.
             ["--primary" as any]: colors.primary,
             ["--secondary" as any]: colors.secondary,
+            // Prevent blend/filter layers from affecting text rendering in some browsers.
+            isolation: "isolate",
           } as React.CSSProperties
         }
       >
         {/* Soft bloom (more splendente, not harsh) */}
         <div
-          className="absolute w-44 h-44 rounded-full"
+          className="absolute w-56 h-56 rounded-full"
           style={{
             backgroundImage: `radial-gradient(circle, ${colors.primary}33 0%, ${colors.secondary}22 35%, transparent 70%)`,
             filter: "blur(18px)",
-            opacity: 0.65,
+            opacity: 0.8,
+            mixBlendMode: "screen",
+            pointerEvents: "none",
+          }}
+        />
+        {/* Extra far bloom for “shine” */}
+        <div
+          className="absolute w-72 h-72 rounded-full"
+          style={{
+            backgroundImage: `radial-gradient(circle, ${colors.primary}22 0%, ${colors.secondary}18 35%, transparent 72%)`,
+            filter: "blur(26px)",
+            opacity: 0.55,
             mixBlendMode: "screen",
             pointerEvents: "none",
           }}
@@ -92,14 +106,17 @@ export function CentralSun({ core, coreDescription, theme }: CentralSunProps) {
         transition={{ duration: 0.3 }}
       >
         <div
-          className="px-5 py-3 rounded-xl backdrop-blur-xl border text-center min-w-[220px]"
+          className="relative px-5 py-3 rounded-xl border text-center min-w-[220px] overflow-hidden"
           style={{
-            background: "rgba(0,0,0,0.9)",
             borderColor: `${colors.primary}50`,
             boxShadow: `0 0 30px ${colors.primary}30`,
           }}
         >
-          <p className="text-sm text-white/80 leading-relaxed italic">"{coreDescription}"</p>
+          {/* Put backdrop blur on a background layer to avoid text blur artifacts on some GPUs */}
+          <div className="absolute inset-0 backdrop-blur-xl" style={{ background: "rgba(0,0,0,0.9)" }} />
+          <div className="relative">
+            <p className="text-sm text-white/80 leading-relaxed italic">"{coreDescription}"</p>
+          </div>
         </div>
       </motion.div>
     </div>
