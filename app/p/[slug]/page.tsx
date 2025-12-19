@@ -17,3 +17,4 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
 
   return <AntiPortfolioView flightLog={validated} mode="static" />
 }
+

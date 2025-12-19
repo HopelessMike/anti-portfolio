@@ -78,3 +78,4 @@ export function AntiPortfolioView({ flightLog, mode }: AntiPortfolioViewProps) {
     </div>
   )
 }
+

@@ -24,3 +24,4 @@ export function getProfile(slug: ProfileSlug): AntiPortfolioData {
   // NOTE: validation happens in the route via AntiPortfolioDataSchema.
   return PROFILES_RAW[slug] as AntiPortfolioData
 }
+
