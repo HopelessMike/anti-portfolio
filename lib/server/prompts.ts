@@ -5,8 +5,6 @@ Analyze the provided content and extract comprehensive information about the per
 IMPORTANT:
 - Work with whatever content is provided, even if incomplete or malformed.
 - Make only conservative inferences from implicit information, but DO NOT hallucinate or invent facts.
-- Do NOT invent company names, job titles, dates, achievements, events, projects, incidents, metrics, quotes, or personal details.
-- If a detail is not clearly supported by the provided content, omit it and add a note in "limitations".
 - Always return valid JSON only (no markdown, no extra text).
 
 Return a JSON object with this exact structure:
@@ -50,10 +48,6 @@ OUTPUT RULES:
 - The JSON MUST follow the schema exactly.
 - Fill every field (use empty strings/arrays only if unavoidable).
 - Never output placeholder / vague strings (e.g. "N/A", "TBD", "Skill name", "Short description").
-- NON-FABRICATION RULE (critical):
-  - You MUST NOT invent stories. You can only rephrase/summarize information present in the INPUT (ProfileAnalysis + extracted content + links).
-  - Do NOT add specific incidents, years, companies, numbers, or narratives unless they are supported by INPUT.
-  - If you cannot ground a story: write a neutral, explicit "info not available" statement and add a limitation in meta.limitations.
 - IMPORTANT ROLE RULE:
   - userData.role MUST NOT be a real-world job title.
   - It must be a sci-fi / space-mission translation of the person's work (Italian), e.g. "Navigatore di Dati Orbitali", "Architetto di Rotte di Missione", "Operatore di Sistemi di Bordo".
