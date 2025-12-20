@@ -37,12 +37,15 @@ export function SocialPlanet({
   const size = 24 + (social.relevance / 10) * 36
   const Icon = iconMap[social.icon]
   const planetRef = useRef<HTMLDivElement>(null)
+  const initialOrbitOffsetDeg = useRef<number>(Math.random() * 360)
 
   // Slow down global orbit when any body is hovered (prevents hover loss while reading tooltip).
   const slowFactor = isSystemHovered ? 2 : 1
   const rotationDuration = social.speed * slowFactor
   const orbitRotate = useContinuousRotate({ durationSec: rotationDuration, direction: 1 })
-  const selfRotate = useTransform(orbitRotate, (v) => -v)
+  const orbitRotateWithOffset = useTransform(orbitRotate, (v) => v + initialOrbitOffsetDeg.current)
+  // Counter-rotate using the *offset* orbit angle so the icon stays upright even with random spawn phase.
+  const selfRotate = useTransform(orbitRotateWithOffset, (v) => -v)
   const isRingEmphasized = isSelected || isHovered
   const ringOpacity = isRingEmphasized ? 0.7 : 0.6
   const ringBorderColor = isRingEmphasized ? `${colors.base}55` : `${colors.base}26`
@@ -57,8 +60,8 @@ export function SocialPlanet({
         top: "50%",
         marginLeft: -social.orbitRadius,
         marginTop: -social.orbitRadius,
-        zIndex: 20,
-        rotate: orbitRotate,
+        zIndex: 12,
+        rotate: orbitRotateWithOffset,
       }}
     >
       {/* Orbit ring */}

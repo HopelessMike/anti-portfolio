@@ -1,7 +1,7 @@
 "use client"
 
 import { motion, useTransform } from "framer-motion"
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useMemo, useRef } from "react"
 import type { Skill } from "@/lib/user-data"
 import { planetColors } from "@/lib/user-data"
 import { buildPlanetBackground, getDeterministicPalette, getPlanetAppearanceForKind } from "@/lib/planet-appearance"
@@ -28,16 +28,16 @@ export function PlanetNode({
   onHoverEnd,
   isSystemHovered,
 }: PlanetNodeProps) {
-  const themeColors = planetColors.skill[skill.type]
   const size = 24 + (skill.relevance / 10) * 36
   const planetRef = useRef<HTMLDivElement>(null)
-  const [textureUrl, setTextureUrl] = useState<string | null>(null)
+  const initialOrbitOffsetDeg = useRef<number>(Math.random() * 360)
 
   // Orbit speed is controlled via a MotionValue so it can change immediately on hover.
   // Keep slowdown noticeable but not “frozen”.
   const slowFactor = isSystemHovered ? 2 : 1
   const rotationDuration = skill.speed * slowFactor
   const orbitRotate = useContinuousRotate({ durationSec: rotationDuration, direction: 1 })
+  const orbitRotateWithOffset = useTransform(orbitRotate, (v) => v + initialOrbitOffsetDeg.current)
   // Counter-rotate the planet to cancel the orbit rotation (prevents “spinning on itself”).
   const selfRotate = useTransform(orbitRotate, (v) => -v)
   const isRingEmphasized = isSelected || isHovered
@@ -77,40 +77,19 @@ export function PlanetNode({
     [appearance.hueShiftDeg, appearance.variant, palette.accent, palette.base, seedKey],
   )
 
-  useEffect(() => {
-    let cancelled = false
-
-    const run = () => {
-      const url = generatePlanetTextureSync({
+  // Generate immediately (cached) to avoid “spawn then change color/texture” pop-in.
+  const textureUrl = useMemo(
+    () =>
+      generatePlanetTextureSync({
         seedKey,
         size: texSize,
         base: palette.base,
         accent: palette.accent,
         variant: textureVariant,
         hueShiftDeg: appearance.hueShiftDeg,
-      })
-      if (!cancelled) setTextureUrl(url)
-    }
-
-    const w = window as unknown as {
-      requestIdleCallback?: (cb: () => void, opts?: { timeout?: number }) => number
-      cancelIdleCallback?: (id: number) => void
-    }
-
-    if (w.requestIdleCallback) {
-      const id = w.requestIdleCallback(run, { timeout: 250 })
-      return () => {
-        cancelled = true
-        w.cancelIdleCallback?.(id)
-      }
-    }
-
-    const t = window.setTimeout(run, 0)
-    return () => {
-      cancelled = true
-      window.clearTimeout(t)
-    }
-  }, [appearance.hueShiftDeg, palette.accent, palette.base, seedKey, texSize, textureVariant])
+      }),
+    [appearance.hueShiftDeg, palette.accent, palette.base, seedKey, texSize, textureVariant],
+  )
 
   // No internal spin: skills must NOT rotate on themselves (only orbit rotation is allowed).
 
@@ -124,8 +103,8 @@ export function PlanetNode({
         top: "50%",
         marginLeft: -skill.orbitRadius,
         marginTop: -skill.orbitRadius,
-        zIndex: 20,
-        rotate: orbitRotate,
+        zIndex: 12,
+        rotate: orbitRotateWithOffset,
       }}
     >
       {/* Orbit ring */}
@@ -150,12 +129,8 @@ export function PlanetNode({
           marginLeft: -size / 2,
           marginTop: -size / 2,
           rotate: selfRotate,
-          ...(textureUrl
-            ? {
-                // Keep a base gradient under the rotating texture to avoid “double stamping” the same image.
-                backgroundImage: `radial-gradient(circle at 28% 26%, ${palette.base}ff 0%, ${palette.accent}ff 55%, ${palette.base}aa 100%)`,
-              }
-            : textureFallback),
+          // Always keep the same base (no switching) to avoid color “flash” at spawn.
+          ...textureFallback,
           boxShadow:
             isSelected || isHovered
               ? `0 0 40px ${palette.glow}, 0 0 80px ${palette.glow}, inset 0 0 20px rgba(255,255,255,0.3)`

@@ -27,7 +27,7 @@ export function BlackHole({
 
   return (
     <motion.div
-      className="absolute z-20"
+      className="absolute z-40"
       style={{
         left: `calc(50% + ${position.x}px)`,
         top: `calc(50% + ${position.y}px)`,

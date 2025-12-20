@@ -2,7 +2,7 @@
 
 import { motion, useTransform } from "framer-motion"
 import { AlertTriangle } from "lucide-react"
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useMemo, useRef } from "react"
 import type { LessonLearned } from "@/lib/user-data"
 import { planetColors } from "@/lib/user-data"
 import { buildPlanetBackground, getPlanetAppearance } from "@/lib/planet-appearance"
@@ -34,7 +34,7 @@ export function LessonPlanet({
   const appearance = getPlanetAppearance(seedKey)
   const size = 22 + (lesson.relevance / 10) * 48
   const planetRef = useRef<HTMLDivElement>(null)
-  const [textureUrl, setTextureUrl] = useState<string | null>(null)
+  const initialOrbitOffsetDeg = useRef<number>(Math.random() * 360)
   const texture = buildPlanetBackground({
     base: colors.base,
     accent: colors.accent,
@@ -59,46 +59,27 @@ export function LessonPlanet({
   const texSize = size < 44 ? 128 : size < 72 ? 192 : 256
   const textureFallback = useMemo(() => texture, [texture])
 
-  useEffect(() => {
-    let cancelled = false
-
-    const run = () => {
-      const url = generatePlanetTextureSync({
+  // Generate immediately (cached) so the lesson planet spawns with its final look.
+  const textureUrl = useMemo(
+    () =>
+      generatePlanetTextureSync({
         seedKey,
         size: texSize,
         base: colors.base,
         accent: colors.accent,
         variant: textureVariant,
         hueShiftDeg: appearance.hueShiftDeg,
-      })
-      if (!cancelled) setTextureUrl(url)
-    }
-
-    const w = window as unknown as {
-      requestIdleCallback?: (cb: () => void, opts?: { timeout?: number }) => number
-      cancelIdleCallback?: (id: number) => void
-    }
-
-    if (w.requestIdleCallback) {
-      const id = w.requestIdleCallback(run, { timeout: 250 })
-      return () => {
-        cancelled = true
-        w.cancelIdleCallback?.(id)
-      }
-    }
-
-    const t = window.setTimeout(run, 0)
-    return () => {
-      cancelled = true
-      window.clearTimeout(t)
-    }
-  }, [appearance.hueShiftDeg, colors.accent, colors.base, seedKey, texSize, textureVariant])
+      }),
+    [appearance.hueShiftDeg, colors.accent, colors.base, seedKey, texSize, textureVariant],
+  )
 
   // Slow down global orbit when any body is hovered (prevents hover loss while reading tooltip).
   const slowFactor = isSystemHovered ? 2 : 1
   const rotationDuration = lesson.speed * slowFactor
   const orbitRotate = useContinuousRotate({ durationSec: rotationDuration, direction: -1 })
-  const selfRotate = useTransform(orbitRotate, (v) => -v)
+  const orbitRotateWithOffset = useTransform(orbitRotate, (v) => v + initialOrbitOffsetDeg.current)
+  // Counter-rotate using the *offset* orbit angle so the icon stays upright even with random spawn phase.
+  const selfRotate = useTransform(orbitRotateWithOffset, (v) => -v)
   const isRingEmphasized = isSelected || isHovered
   const ringOpacity = isRingEmphasized ? 0.7 : 0.5
   const ringBorderColor = isRingEmphasized ? `${colors.base}55` : `${colors.base}26`
@@ -113,8 +94,8 @@ export function LessonPlanet({
         top: "50%",
         marginLeft: -lesson.orbitRadius,
         marginTop: -lesson.orbitRadius,
-        zIndex: 20,
-        rotate: orbitRotate,
+        zIndex: 12,
+        rotate: orbitRotateWithOffset,
       }}
     >
       {/* Orbit ring - danger dashed */}
@@ -135,11 +116,8 @@ export function LessonPlanet({
           marginLeft: -size / 2,
           marginTop: -size / 2,
           rotate: selfRotate,
-          ...(textureUrl
-            ? {
-                backgroundImage: `radial-gradient(circle at 28% 26%, ${colors.base}ff 0%, ${colors.accent}ff 55%, ${colors.base}aa 100%)`,
-              }
-            : textureFallback),
+          // Keep base stable to avoid spawn “flash”.
+          ...textureFallback,
           boxShadow:
             isSelected || isHovered ? `0 0 50px ${colors.glow}, 0 0 100px ${colors.glow}` : `0 0 20px ${colors.glow}`,
           opacity: 1,
