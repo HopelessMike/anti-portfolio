@@ -6,9 +6,16 @@ IMPORTANT:
 - Work with whatever content is provided, even if incomplete or malformed.
 - Make only conservative inferences from implicit information, but DO NOT hallucinate or invent facts.
 - Always return valid JSON only (no markdown, no extra text).
+- CRITICAL: Extract the person's REAL FULL NAME if and only if it is explicitly present in the sources.
+  - The name is typically in the CV header (often ALL CAPS) and/or in the contacts section.
+  - Do NOT output a skill/tool (e.g. "MS SQL", "Power BI"), a job title, a section title, or a company name as the person's name.
+  - If you are not sure, set person.name to an empty string.
 
 Return a JSON object with this exact structure:
 {
+  "person": {
+    "name": "Full Name or empty string if unknown"
+  },
   "experiences": {
     "companies": ["company1"],
     "projects": ["project1"],

@@ -1,4 +1,11 @@
 export interface ProfileAnalysis {
+  person: {
+    /**
+     * Person's real full name, if explicitly present in sources (CV header, contacts, LinkedIn page content).
+     * Empty string if unknown/uncertain.
+     */
+    name: string
+  }
   experiences: {
     companies: string[]
     projects: string[]

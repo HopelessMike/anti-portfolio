@@ -237,6 +237,10 @@ async function analyzeProfile(openai: ReturnType<typeof getOpenAIClient>, conten
   const raw = resp.choices[0]?.message?.content || ""
   const parsed = safeJsonParse<ProfileAnalysis>(raw)
 
+  // Ensure new fields exist (backward compatible if older cached JSON is used).
+  parsed.person = parsed.person && typeof parsed.person === "object" ? parsed.person : ({ name: "" } as any)
+  parsed.person.name = typeof (parsed as any).person?.name === "string" ? (parsed as any).person.name.trim() : ""
+
   // Normalize confidence sources quickly (best-effort)
   parsed.confidence = parsed.confidence || { overall: 0.5, sources: { files: 0, web: 0 } }
   parsed.confidence.sources = parsed.confidence.sources || { files: 0, web: 0 }
@@ -306,125 +310,6 @@ function enforceCounts(data: any) {
   return data
 }
 
-function guessNameFromLinkedIn(links: string[]): string | null {
-  for (const l of links) {
-    const m = l.match(/linkedin\.com\/in\/([^\/\?\#]+)/i)
-    if (!m) continue
-    const slug = decodeURIComponent(m[1])
-      .replace(/[^a-zA-Z0-9\-\_]/g, "")
-      .replace(/[_]/g, "-")
-      .trim()
-    const parts = slug.split("-").filter(Boolean)
-    // Skip very short/obviously non-name slugs
-    if (parts.length < 2) continue
-    const name = parts
-      .slice(0, 4)
-      .map((p) => (p.length ? p[0].toUpperCase() + p.slice(1).toLowerCase() : p))
-      .join(" ")
-    if (name.length >= 5) return name
-  }
-  return null
-}
-
-function guessNameFromCvText(text: string): string | null {
-  const cleaned = text.replace(/\r/g, "\n")
-  // Try explicit label patterns
-  const labeled = cleaned.match(/(?:^|\n)\s*(?:nome\s*[:\-]\s*)([^\n]{3,80})/i)
-  if (labeled?.[1]) {
-    const candidate = labeled[1].trim()
-    if (candidate.split(/\s+/).length >= 2) return candidate
-  }
-
-  const titleize = (s: string) =>
-    s
-      .replace(/[#]/g, " ")
-      .split(/\s+/)
-      .filter(Boolean)
-      .map((w) => (w.length ? w[0].toUpperCase() + w.slice(1).toLowerCase() : w))
-      .join(" ")
-
-  const jobTokens = new Set([
-    "consultant",
-    "engineer",
-    "developer",
-    "designer",
-    "manager",
-    "analyst",
-    "specialist",
-    "director",
-    "officer",
-    "architect",
-    "product",
-    "data",
-    "marketing",
-    "customer",
-    "transformation",
-    "trasformation",
-  ])
-
-  const sectionTokens = new Set([
-    "profilo",
-    "personale",
-    "istruzione",
-    "lingue",
-    "contatti",
-    "competenze",
-    "esperienze",
-    "lavorative",
-    "curriculum",
-    "vitae",
-    "resume",
-    "cv",
-  ])
-
-  // If pdf text comes as a single long line, try to pick an ALL CAPS "NAME SURNAME" very early.
-  const head = cleaned
-    .slice(0, 800)
-    .replace(/[#]/g, " ")
-    .replace(/\s+/g, " ")
-    .trim()
-
-  const capsRegex = /([A-ZÀ-ÖØ-Ý]{2,}(?:\s+[A-ZÀ-ÖØ-Ý]{2,}){1,2})/g
-  for (const match of head.matchAll(capsRegex)) {
-    const candidate = match[1].trim()
-    const words = candidate.split(/\s+/).filter(Boolean)
-    if (words.length < 2 || words.length > 3) continue
-    const lower = words.map((w) => w.toLowerCase())
-    if (lower.some((w) => jobTokens.has(w))) continue
-    if (lower.some((w) => sectionTokens.has(w))) continue
-    return titleize(candidate)
-  }
-
-  // Heuristic: pick the first "Name Surname" looking line in the header (including ALL CAPS)
-  const headerLines = cleaned
-    .split("\n")
-    .map((l) => l.trim())
-    .filter(Boolean)
-    .slice(0, 12)
-    .filter((l) => !/curriculum|resume|cv|email|telefono|phone|linkedin|github/i.test(l))
-
-  for (const line of headerLines) {
-    const words = line.split(/\s+/).filter(Boolean)
-    if (words.length < 2 || words.length > 4) continue
-
-    // Case 1: Title Case (e.g. "Michele Miranda")
-    const looksLikeTitleCaseName = words.every((w) => /^[A-ZÀ-ÖØ-Ý][a-zà-öø-ÿ'’\-]+$/.test(w))
-    if (looksLikeTitleCaseName) return line
-
-    // Case 2: ALL CAPS (common in CV headers) - prefer 2-word lines for names
-    const looksAllCaps = words.every((w) => /^[A-ZÀ-ÖØ-Ý'’\-]+$/.test(w))
-    if (looksAllCaps) {
-      const lowerWords = words.map((w) => w.toLowerCase())
-      // Reject obvious job titles when ALL CAPS (e.g. CUSTOMER TRANSFORMATION CONSULTANT)
-      const hasJobToken = lowerWords.some((w) => jobTokens.has(w))
-      if (words.length === 2 && !hasJobToken) return titleize(line)
-      if (words.length === 3 && !hasJobToken) return titleize(line)
-    }
-  }
-
-  return null
-}
-
 function isPlaceholderName(name: string): boolean {
   const n = name.trim().toLowerCase()
   if (!n) return true
@@ -473,9 +358,11 @@ function enforceRealName(data: any, nameHint?: string | null) {
   const ud = data?.userData
   if (!ud) return data
   const currentName = String(ud.name || "")
-  if (!currentName || isPlaceholderName(currentName) || looksLikeJobTitleAsName(currentName)) {
-    if (nameHint && !isPlaceholderName(nameHint) && !looksLikeJobTitleAsName(nameHint)) ud.name = nameHint
-    else ud.name = "Anonymous Explorer"
+  const currentInvalid = !currentName || isPlaceholderName(currentName) || looksLikeJobTitleAsName(currentName)
+  if (currentInvalid) {
+    const hint = typeof nameHint === "string" ? nameHint : ""
+    const hintInvalid = !hint || isPlaceholderName(hint) || looksLikeJobTitleAsName(hint)
+    ud.name = hintInvalid ? "Anonymous Explorer" : hint
   }
   return data
 }
@@ -529,15 +416,14 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "No content could be extracted from the provided files and links" }, { status: 400 })
     }
 
-    const cvForName = fileTexts.join("\n\n") || combined
-    const nameHint = guessNameFromCvText(cvForName) || guessNameFromLinkedIn(links)
-
     // AI
     const openai = getOpenAIClient()
     const analysis = await withRetry(() => analyzeProfile(openai, combined, files.length, links.length), {
       maxRetries: serverConfig.maxRetries,
       operation: "ai:analyze",
     })
+
+    const nameHint = (analysis as any)?.person?.name ? String((analysis as any).person.name).trim() : undefined
 
     const antiPortfolio = await withRetry(
       () =>
