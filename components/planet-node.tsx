@@ -1,10 +1,11 @@
 "use client"
 
-import { motion } from "framer-motion"
+import { motion, useTransform } from "framer-motion"
 import { useRef } from "react"
 import type { Skill } from "@/lib/user-data"
 import { planetColors } from "@/lib/user-data"
 import { HoverTooltip } from "@/components/hover-tooltip"
+import { useContinuousRotate } from "@/components/use-continuous-rotate"
 
 interface PlanetNodeProps {
   skill: Skill
@@ -29,7 +30,13 @@ export function PlanetNode({
   const size = 24 + (skill.relevance / 10) * 36
   const planetRef = useRef<HTMLDivElement>(null)
 
-  const rotationDuration = isSystemHovered ? skill.speed * 4 : skill.speed
+  // Orbit speed is controlled via a MotionValue so it can change immediately on hover.
+  // Keep slowdown noticeable but not “frozen”.
+  const slowFactor = isSystemHovered ? 2 : 1
+  const rotationDuration = skill.speed * slowFactor
+  const orbitRotate = useContinuousRotate({ durationSec: rotationDuration, direction: 1 })
+  // Counter-rotate the planet to cancel the orbit rotation (prevents “spinning on itself”).
+  const selfRotate = useTransform(orbitRotate, (v) => -v)
   const ringOpacity = isSelected || isHovered ? 0.55 : 0.12
   const texX = 30 + ((skill.id * 17) % 40)
   const texY = 28 + ((skill.id * 29) % 40)
@@ -46,12 +53,7 @@ export function PlanetNode({
         marginLeft: -skill.orbitRadius,
         marginTop: -skill.orbitRadius,
         zIndex: 20,
-      }}
-      animate={{ rotate: 360 }}
-      transition={{
-        duration: rotationDuration,
-        repeat: Number.POSITIVE_INFINITY,
-        ease: "linear",
+        rotate: orbitRotate,
       }}
     >
       {/* Orbit ring */}
@@ -75,6 +77,7 @@ export function PlanetNode({
           top: 0,
           marginLeft: -size / 2,
           marginTop: -size / 2,
+          rotate: selfRotate,
           background: `
             radial-gradient(circle at 30% 30%, ${colors.base}ff 0%, ${colors.accent}ff 50%, ${colors.base}aa 100%)
           `,
@@ -91,16 +94,6 @@ export function PlanetNode({
           scale: 1.3,
         }}
         whileTap={{ scale: 0.95 }}
-        animate={{
-          rotate: -360,
-        }}
-        transition={{
-          rotate: {
-            duration: rotationDuration,
-            repeat: Number.POSITIVE_INFINITY,
-            ease: "linear",
-          },
-        }}
       >
         {/* Texture overlay */}
         <div

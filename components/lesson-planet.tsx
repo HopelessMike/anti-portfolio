@@ -1,12 +1,13 @@
 "use client"
 
-import { motion } from "framer-motion"
+import { motion, useTransform } from "framer-motion"
 import { AlertTriangle } from "lucide-react"
 import { useRef } from "react"
 import type { LessonLearned } from "@/lib/user-data"
 import { planetColors } from "@/lib/user-data"
 import { buildPlanetBackground, getPlanetAppearance } from "@/lib/planet-appearance"
 import { HoverTooltip } from "@/components/hover-tooltip"
+import { useContinuousRotate } from "@/components/use-continuous-rotate"
 
 interface LessonPlanetProps {
   lesson: LessonLearned
@@ -38,7 +39,11 @@ export function LessonPlanet({
     hueShiftDeg: appearance.hueShiftDeg,
   })
 
-  const rotationDuration = isSystemHovered ? lesson.speed * 4 : lesson.speed
+  // Slow down global orbit when any body is hovered (prevents hover loss while reading tooltip).
+  const slowFactor = isSystemHovered ? 2 : 1
+  const rotationDuration = lesson.speed * slowFactor
+  const orbitRotate = useContinuousRotate({ durationSec: rotationDuration, direction: -1 })
+  const selfRotate = useTransform(orbitRotate, (v) => -v)
   const dimOthers = isSystemHovered && !isHovered && !isSelected
   const ringOpacity = isSelected || isHovered ? 0.6 : 0.14
 
@@ -53,12 +58,7 @@ export function LessonPlanet({
         marginLeft: -lesson.orbitRadius,
         marginTop: -lesson.orbitRadius,
         zIndex: 20,
-      }}
-      animate={{ rotate: -360 }}
-      transition={{
-        duration: rotationDuration,
-        repeat: Number.POSITIVE_INFINITY,
-        ease: "linear",
+        rotate: orbitRotate,
       }}
     >
       {/* Orbit ring - danger dashed */}
@@ -78,6 +78,7 @@ export function LessonPlanet({
           top: 0,
           marginLeft: -size / 2,
           marginTop: -size / 2,
+          rotate: selfRotate,
           ...texture,
           boxShadow:
             isSelected || isHovered ? `0 0 50px ${colors.glow}, 0 0 100px ${colors.glow}` : `0 0 20px ${colors.glow}`,
@@ -88,16 +89,6 @@ export function LessonPlanet({
         onHoverEnd={onHoverEnd}
         whileHover={{ scale: 1.3 }}
         whileTap={{ scale: 0.95 }}
-        animate={{
-          rotate: 360,
-        }}
-        transition={{
-          rotate: {
-            duration: rotationDuration,
-            repeat: Number.POSITIVE_INFINITY,
-            ease: "linear",
-          },
-        }}
       >
         <AlertTriangle className="w-1/2 h-1/2 text-white/80" />
 

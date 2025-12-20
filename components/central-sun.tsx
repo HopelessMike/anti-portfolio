@@ -9,9 +9,11 @@ interface CentralSunProps {
   core: string
   coreDescription: string
   theme: ThemeType
+  onHoverStart?: () => void
+  onHoverEnd?: () => void
 }
 
-export function CentralSun({ core, coreDescription, theme }: CentralSunProps) {
+export function CentralSun({ core, coreDescription, theme, onHoverStart, onHoverEnd }: CentralSunProps) {
   const [isHovered, setIsHovered] = useState(false)
   const colors = themeColors[theme]
 
@@ -74,8 +76,14 @@ export function CentralSun({ core, coreDescription, theme }: CentralSunProps) {
         {/* Hover hit-area only (do not change text or tooltip behavior) */}
         <motion.div
           className="absolute w-32 h-32 rounded-full cursor-pointer pointer-events-auto"
-          onHoverStart={() => setIsHovered(true)}
-          onHoverEnd={() => setIsHovered(false)}
+          onHoverStart={() => {
+            setIsHovered(true)
+            onHoverStart?.()
+          }}
+          onHoverEnd={() => {
+            setIsHovered(false)
+            onHoverEnd?.()
+          }}
           whileHover={{ scale: 1.02 }}
           transition={{ duration: 0.2 }}
           style={{ background: "transparent" }}

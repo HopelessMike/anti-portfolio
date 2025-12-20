@@ -1,11 +1,12 @@
 "use client"
 
-import { motion } from "framer-motion"
+import { motion, useTransform } from "framer-motion"
 import { Linkedin, Github, Globe } from "lucide-react"
 import { useRef } from "react"
 import type { SocialLink } from "@/lib/user-data"
 import { planetColors } from "@/lib/user-data"
 import { HoverTooltip } from "@/components/hover-tooltip"
+import { useContinuousRotate } from "@/components/use-continuous-rotate"
 
 interface SocialPlanetProps {
   social: SocialLink
@@ -37,7 +38,11 @@ export function SocialPlanet({
   const Icon = iconMap[social.icon]
   const planetRef = useRef<HTMLDivElement>(null)
 
-  const rotationDuration = isSystemHovered ? social.speed * 4 : social.speed
+  // Slow down global orbit when any body is hovered (prevents hover loss while reading tooltip).
+  const slowFactor = isSystemHovered ? 2 : 1
+  const rotationDuration = social.speed * slowFactor
+  const orbitRotate = useContinuousRotate({ durationSec: rotationDuration, direction: 1 })
+  const selfRotate = useTransform(orbitRotate, (v) => -v)
   const ringOpacity = isSelected || isHovered ? 0.55 : 0.14
 
   return (
@@ -51,12 +56,7 @@ export function SocialPlanet({
         marginLeft: -social.orbitRadius,
         marginTop: -social.orbitRadius,
         zIndex: 20,
-      }}
-      animate={{ rotate: 360 }}
-      transition={{
-        duration: rotationDuration,
-        repeat: Number.POSITIVE_INFINITY,
-        ease: "linear",
+        rotate: orbitRotate,
       }}
     >
       {/* Orbit ring */}
@@ -76,6 +76,7 @@ export function SocialPlanet({
           top: 0,
           marginLeft: -size / 2,
           marginTop: -size / 2,
+          rotate: selfRotate,
           background: `radial-gradient(circle at 30% 30%, ${colors.base} 0%, ${colors.accent} 100%)`,
           boxShadow:
             isSelected || isHovered ? `0 0 40px ${colors.glow}, 0 0 80px ${colors.glow}` : `0 0 15px ${colors.glow}`,
@@ -85,14 +86,6 @@ export function SocialPlanet({
         onHoverEnd={onHoverEnd}
         whileHover={{ scale: 1.3 }}
         whileTap={{ scale: 0.95 }}
-        animate={{ rotate: -360 }}
-        transition={{
-          rotate: {
-            duration: rotationDuration,
-            repeat: Number.POSITIVE_INFINITY,
-            ease: "linear",
-          },
-        }}
       >
         <div
           className="absolute inset-0 rounded-full pointer-events-none"

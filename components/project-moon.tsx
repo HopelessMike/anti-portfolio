@@ -6,6 +6,7 @@ import type { Project, ThemeType } from "@/lib/user-data"
 import { themeColors } from "@/lib/user-data"
 import { buildPlanetBackground, getPlanetAppearance } from "@/lib/planet-appearance"
 import { HoverTooltip } from "@/components/hover-tooltip"
+import { useContinuousRotate } from "@/components/use-continuous-rotate"
 
 export function ProjectMoon({
   project,
@@ -40,9 +41,12 @@ export function ProjectMoon({
   // Make moons feel like moons: bigger, textured, no “icon button”.
   const size = 18 + Math.min(22, project.tags.length * 2.2)
   const orbitR = 44 + index * 18
-  const duration = isSystemHovered ? 22 + index * 4 : 12 + index * 3
+  // Slow down when any body is hovered (prevents hover loss while reading tooltip).
+  const slowFactor = isSystemHovered ? 2 : 1
+  const duration = (12 + index * 3) * slowFactor
   const dimOthers = isSystemHovered && !isHovered && !isSelected
   const moonRef = useRef<HTMLButtonElement>(null)
+  const orbitRotate = useContinuousRotate({ durationSec: duration, direction: 1 })
 
   const texture = buildPlanetBackground({
     base: colors.primary,
@@ -72,9 +76,7 @@ export function ProjectMoon({
 
       <motion.div
         className="absolute left-1/2 top-1/2"
-        style={{ width: orbitR * 2, height: orbitR * 2, transform: "translate(-50%, -50%)" }}
-        animate={{ rotate: 360 }}
-        transition={{ duration, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
+        style={{ width: orbitR * 2, height: orbitR * 2, transform: "translate(-50%, -50%)", rotate: orbitRotate }}
       >
         <motion.button
           type="button"

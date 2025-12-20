@@ -36,6 +36,7 @@ export function GalaxyMap({ userData }: { userData: UserData }) {
   const [hoveredItem, setHoveredItem] = useState<HoveredItem>(null)
   const colors = themeColors[userData.theme]
   const isSystemHovered = hoveredItem !== null
+  const slowFactor = isSystemHovered ? 2 : 1
 
   const panelItem = useMemo(() => {
     if (!selectedItem) return null
@@ -169,7 +170,7 @@ export function GalaxyMap({ userData }: { userData: UserData }) {
           {skillAnchors.map(({ skill, radius, startAngle }) => {
             const palette = planetColors.skill[skill.type]
             const size = 46 + (skill.relevance / 10) * 54 + (skill.level / 100) * 10
-            const orbitDuration = Math.max(18, Math.min(80, skill.speed * 1.25))
+            const orbitDuration = Math.max(18, Math.min(80, skill.speed * 1.25)) * slowFactor
             return (
               <motion.div
                 key={skill.id}

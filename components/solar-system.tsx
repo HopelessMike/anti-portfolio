@@ -22,6 +22,7 @@ type SelectedItem =
   | null
 
 type HoveredItem =
+  | { type: "core" }
   | { type: "skill"; id: number }
   | { type: "social"; id: string }
   | { type: "lesson"; id: string }
@@ -96,7 +97,13 @@ export function SolarSystem({ userData }: SolarSystemProps) {
 
       {/* Solar system container */}
       <div className="relative w-[1100px] h-[1100px] max-w-full max-h-full origin-center scale-[0.9]">
-        <CentralSun core={userData.core} coreDescription={userData.coreDescription} theme={userData.theme} />
+        <CentralSun
+          core={userData.core}
+          coreDescription={userData.coreDescription}
+          theme={userData.theme}
+          onHoverStart={() => setHoveredItem({ type: "core" })}
+          onHoverEnd={() => setHoveredItem(null)}
+        />
 
         {skillsToShow.map((skill) => (
           <PlanetNode
