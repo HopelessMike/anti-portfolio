@@ -43,7 +43,9 @@ export function SocialPlanet({
   const rotationDuration = social.speed * slowFactor
   const orbitRotate = useContinuousRotate({ durationSec: rotationDuration, direction: 1 })
   const selfRotate = useTransform(orbitRotate, (v) => -v)
-  const ringOpacity = isSelected || isHovered ? 0.55 : 0.14
+  const isRingEmphasized = isSelected || isHovered
+  const ringOpacity = isRingEmphasized ? 0.7 : 0.6
+  const ringBorderColor = isRingEmphasized ? `${colors.base}55` : `${colors.base}26`
 
   return (
     <motion.div
@@ -62,7 +64,7 @@ export function SocialPlanet({
       {/* Orbit ring */}
       <div
         className="absolute inset-0 rounded-full border border-dashed"
-        style={{ pointerEvents: "none", borderColor: `${colors.base}22`, opacity: ringOpacity }}
+        style={{ pointerEvents: "none", borderColor: ringBorderColor, opacity: ringOpacity }}
       />
 
       {/* Planet */}

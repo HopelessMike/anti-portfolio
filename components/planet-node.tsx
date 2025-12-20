@@ -37,7 +37,10 @@ export function PlanetNode({
   const orbitRotate = useContinuousRotate({ durationSec: rotationDuration, direction: 1 })
   // Counter-rotate the planet to cancel the orbit rotation (prevents “spinning on itself”).
   const selfRotate = useTransform(orbitRotate, (v) => -v)
-  const ringOpacity = isSelected || isHovered ? 0.55 : 0.12
+  const isRingEmphasized = isSelected || isHovered
+  // Orbit should always be slightly visible, and a bit more visible on hover/selection.
+  const ringOpacity = isRingEmphasized ? 0.7 : 0.5
+  const ringBorderColor = isRingEmphasized ? `${colors.base}55` : `${colors.base}26`
   const texX = 30 + ((skill.id * 17) % 40)
   const texY = 28 + ((skill.id * 29) % 40)
   const hueShiftDeg = ((skill.id * 23) % 34) - 17 // -17..+16 (small variation, deterministic)
@@ -61,7 +64,7 @@ export function PlanetNode({
         className="absolute inset-0 rounded-full border"
         style={{
           pointerEvents: "none",
-          borderColor: `${colors.base}22`,
+          borderColor: ringBorderColor,
           opacity: ringOpacity,
         }}
       />

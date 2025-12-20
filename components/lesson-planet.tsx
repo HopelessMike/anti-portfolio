@@ -45,7 +45,9 @@ export function LessonPlanet({
   const orbitRotate = useContinuousRotate({ durationSec: rotationDuration, direction: -1 })
   const selfRotate = useTransform(orbitRotate, (v) => -v)
   const dimOthers = isSystemHovered && !isHovered && !isSelected
-  const ringOpacity = isSelected || isHovered ? 0.6 : 0.14
+  const isRingEmphasized = isSelected || isHovered
+  const ringOpacity = isRingEmphasized ? 0.7 : 0.5
+  const ringBorderColor = isRingEmphasized ? `${colors.base}55` : `${colors.base}26`
 
   return (
     <motion.div
@@ -64,7 +66,7 @@ export function LessonPlanet({
       {/* Orbit ring - danger dashed */}
       <div
         className="absolute inset-0 rounded-full border-2 border-dashed"
-        style={{ pointerEvents: "none", borderColor: `${colors.base}33`, opacity: ringOpacity }}
+        style={{ pointerEvents: "none", borderColor: ringBorderColor, opacity: ringOpacity }}
       />
 
       {/* Planet with danger styling */}
