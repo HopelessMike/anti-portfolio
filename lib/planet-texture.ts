@@ -19,8 +19,21 @@ function clamp01(v: number) {
   return Math.max(0, Math.min(1, v))
 }
 
-function hexToRgb(hex: string) {
-  const h = hex.replace("#", "").trim()
+function colorToRgb(input: string) {
+  const s = input.trim()
+  // rgb(12 34 56) or rgb(12, 34, 56)
+  if (s.startsWith("rgb(")) {
+    const body = s.slice(4, -1)
+    const parts = body
+      .split(/[,\s]+/)
+      .map((p) => p.trim())
+      .filter(Boolean)
+      .slice(0, 3)
+      .map((n) => Number.parseInt(n, 10))
+    return { r: parts[0] ?? 0, g: parts[1] ?? 0, b: parts[2] ?? 0 }
+  }
+  // hex (#abc / #aabbcc)
+  const h = s.replace("#", "").trim()
   const full = h.length === 3 ? h.split("").map((c) => c + c).join("") : h
   const n = Number.parseInt(full, 16)
   return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 }
@@ -78,7 +91,7 @@ function hslToRgb(h: number, s: number, l: number) {
 }
 
 function shiftHue(hex: string, hueShiftDeg: number, satBoost = 0.06, lightBoost = 0.02) {
-  const { r, g, b } = hexToRgb(hex)
+  const { r, g, b } = colorToRgb(hex)
   const hsl = rgbToHsl(r, g, b)
   const h = (hsl.h + hueShiftDeg / 360 + 1) % 1
   const s = clamp01(hsl.s + satBoost)
@@ -120,8 +133,8 @@ function drawGrain(ctx: CanvasRenderingContext2D, size: number, rng: () => numbe
 }
 
 function drawGasBands(ctx: CanvasRenderingContext2D, size: number, rng: () => number, base: string, accent: string) {
-  const baseRgb = hexToRgb(base)
-  const accentRgb = hexToRgb(accent)
+  const baseRgb = colorToRgb(base)
+  const accentRgb = colorToRgb(accent)
   const angle = (-20 + rng() * 40) * (Math.PI / 180)
   const freq = 6 + Math.floor(rng() * 6) // 6..11
   const phase = rng() * Math.PI * 2
@@ -301,8 +314,9 @@ export function generatePlanetTextureSync(opts: {
   const rng = mulberry32(seed)
 
   // Stylized-but-credible palette shifts.
-  const baseShifted = shiftHue(opts.base, opts.hueShiftDeg ?? 0, 0.08, 0.01)
-  const accentShifted = shiftHue(opts.accent, (opts.hueShiftDeg ?? 0) * 0.85, 0.10, 0.0)
+  // More “cinematic” but still readable: slightly higher saturation, small lightness lift.
+  const baseShifted = shiftHue(opts.base, opts.hueShiftDeg ?? 0, 0.14, 0.02)
+  const accentShifted = shiftHue(opts.accent, (opts.hueShiftDeg ?? 0) * 0.92, 0.16, 0.01)
 
   // Base “albedo”
   const g = ctx.createRadialGradient(opts.size * 0.28, opts.size * 0.26, 0, opts.size * 0.55, opts.size * 0.6, opts.size * 0.85)
@@ -313,7 +327,8 @@ export function generatePlanetTextureSync(opts: {
   ctx.fillRect(0, 0, opts.size, opts.size)
 
   // Variant overlays
-  if (opts.variant === "gasBands") drawGasBands(ctx, opts.size, rng, opts.base, opts.accent)
+  // Pass shifted colors so the hue variance affects the whole texture, not only the base layer.
+  if (opts.variant === "gasBands") drawGasBands(ctx, opts.size, rng, baseShifted, accentShifted)
   else if (opts.variant === "rockyCraters") drawRocky(ctx, opts.size, rng)
   else if (opts.variant === "ice") drawIce(ctx, opts.size, rng)
   else if (opts.variant === "nebula") drawNebula(ctx, opts.size, rng)

@@ -2,10 +2,11 @@
 
 import { motion, useTransform } from "framer-motion"
 import { AlertTriangle } from "lucide-react"
-import { useRef } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import type { LessonLearned } from "@/lib/user-data"
 import { planetColors } from "@/lib/user-data"
 import { buildPlanetBackground, getPlanetAppearance } from "@/lib/planet-appearance"
+import { generatePlanetTextureSync, type PlanetTextureVariant } from "@/lib/planet-texture"
 import { HoverTooltip } from "@/components/hover-tooltip"
 import { useContinuousRotate } from "@/components/use-continuous-rotate"
 
@@ -29,22 +30,75 @@ export function LessonPlanet({
   isSystemHovered,
 }: LessonPlanetProps) {
   const colors = planetColors.lesson
-  const appearance = getPlanetAppearance(`lesson:${lesson.id}:${lesson.title}:${lesson.year}`)
+  const seedKey = `lesson:${lesson.id}:${lesson.title}:${lesson.year}`
+  const appearance = getPlanetAppearance(seedKey)
   const size = 22 + (lesson.relevance / 10) * 48
   const planetRef = useRef<HTMLDivElement>(null)
+  const [textureUrl, setTextureUrl] = useState<string | null>(null)
   const texture = buildPlanetBackground({
     base: colors.base,
     accent: colors.accent,
     variant: appearance.variant === "ice" ? "craters" : appearance.variant,
     hueShiftDeg: appearance.hueShiftDeg,
+    seedKey,
+    detail: "high",
   })
+  const textureVariant: PlanetTextureVariant =
+    appearance.variant === "bands"
+      ? "gasBands"
+      : appearance.variant === "craters"
+        ? "rockyCraters"
+        : appearance.variant === "ice"
+          ? "ice"
+          : appearance.variant === "tech-grid"
+            ? "techGrid"
+            : appearance.variant === "lava"
+              ? "lava"
+              : "nebula"
+
+  const texSize = size < 44 ? 128 : size < 72 ? 192 : 256
+  const textureFallback = useMemo(() => texture, [texture])
+
+  useEffect(() => {
+    let cancelled = false
+
+    const run = () => {
+      const url = generatePlanetTextureSync({
+        seedKey,
+        size: texSize,
+        base: colors.base,
+        accent: colors.accent,
+        variant: textureVariant,
+        hueShiftDeg: appearance.hueShiftDeg,
+      })
+      if (!cancelled) setTextureUrl(url)
+    }
+
+    const w = window as unknown as {
+      requestIdleCallback?: (cb: () => void, opts?: { timeout?: number }) => number
+      cancelIdleCallback?: (id: number) => void
+    }
+
+    if (w.requestIdleCallback) {
+      const id = w.requestIdleCallback(run, { timeout: 250 })
+      return () => {
+        cancelled = true
+        w.cancelIdleCallback?.(id)
+      }
+    }
+
+    const t = window.setTimeout(run, 0)
+    return () => {
+      cancelled = true
+      window.clearTimeout(t)
+    }
+  }, [appearance.hueShiftDeg, colors.accent, colors.base, seedKey, texSize, textureVariant])
 
   // Slow down global orbit when any body is hovered (prevents hover loss while reading tooltip).
   const slowFactor = isSystemHovered ? 2 : 1
   const rotationDuration = lesson.speed * slowFactor
   const orbitRotate = useContinuousRotate({ durationSec: rotationDuration, direction: -1 })
   const selfRotate = useTransform(orbitRotate, (v) => -v)
-  const dimOthers = isSystemHovered && !isHovered && !isSelected
   const isRingEmphasized = isSelected || isHovered
   const ringOpacity = isRingEmphasized ? 0.7 : 0.5
   const ringBorderColor = isRingEmphasized ? `${colors.base}55` : `${colors.base}26`
@@ -72,7 +126,7 @@ export function LessonPlanet({
       {/* Planet with danger styling */}
       <motion.div
         ref={planetRef}
-        className="absolute rounded-full cursor-pointer flex items-center justify-center pointer-events-auto"
+        className="absolute rounded-full cursor-pointer flex items-center justify-center pointer-events-auto overflow-hidden"
         style={{
           width: size,
           height: size,
@@ -81,10 +135,14 @@ export function LessonPlanet({
           marginLeft: -size / 2,
           marginTop: -size / 2,
           rotate: selfRotate,
-          ...texture,
+          ...(textureUrl
+            ? {
+                backgroundImage: `radial-gradient(circle at 28% 26%, ${colors.base}ff 0%, ${colors.accent}ff 55%, ${colors.base}aa 100%)`,
+              }
+            : textureFallback),
           boxShadow:
             isSelected || isHovered ? `0 0 50px ${colors.glow}, 0 0 100px ${colors.glow}` : `0 0 20px ${colors.glow}`,
-          opacity: dimOthers ? 0.7 : 1,
+          opacity: 1,
         }}
         onClick={onClick}
         onHoverStart={onHoverStart}
@@ -92,11 +150,48 @@ export function LessonPlanet({
         whileHover={{ scale: 1.3 }}
         whileTap={{ scale: 0.95 }}
       >
-        <AlertTriangle className="w-1/2 h-1/2 text-white/80" />
+        {/* Texture layer (static, behind the icon) */}
+        {textureUrl && (
+          <div
+            className="absolute inset-0 rounded-full pointer-events-none"
+            style={{
+              backgroundImage: `url(${textureUrl})`,
+              backgroundSize: "cover",
+              transform: "scale(1.18)",
+              opacity: 0.96,
+            }}
+          />
+        )}
+
+        {/* Shading to avoid flat look */}
+        <div
+          className="absolute inset-0 rounded-full pointer-events-none"
+          style={{
+            background:
+              "radial-gradient(circle at 25% 28%, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.00) 55%), radial-gradient(circle at 78% 82%, rgba(0,0,0,0.52) 0%, rgba(0,0,0,0.00) 62%)",
+            opacity: 0.95,
+            mixBlendMode: "multiply",
+          }}
+        />
+
+        {/* Icon backplate for readability over textured surface */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
+          <div
+            className="rounded-full"
+            style={{
+              width: "58%",
+              height: "58%",
+              background: "radial-gradient(circle, rgba(0,0,0,0.30) 0%, rgba(0,0,0,0.00) 72%)",
+              filter: "blur(0.2px)",
+            }}
+          />
+        </div>
+
+        <AlertTriangle className="w-1/2 h-1/2 text-white/95 relative z-30 drop-shadow-[0_2px_10px_rgba(0,0,0,0.85)]" />
 
         {/* Pulsing ring */}
         <motion.div
-          className="absolute inset-0 rounded-full border-2 border-red-500/50"
+          className="absolute inset-0 rounded-full border-2 border-red-500/50 z-10"
           animate={{
             scale: [1, 1.3, 1],
             opacity: [0.5, 0, 0.5],

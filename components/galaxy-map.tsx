@@ -4,6 +4,7 @@ import { useMemo, useState } from "react"
 import { motion } from "framer-motion"
 import type { UserData, Skill, SocialLink, LessonLearned, Project } from "@/lib/user-data"
 import { planetColors, themeColors } from "@/lib/user-data"
+import { getDeterministicPalette } from "@/lib/planet-appearance"
 import { CentralSun } from "@/components/central-sun"
 import { BlackHole } from "@/components/black-hole"
 import { ProjectPanel } from "@/components/project-panel"
@@ -168,7 +169,7 @@ export function GalaxyMap({ userData }: { userData: UserData }) {
 
           {/* Skill planets orbit around the core (not random). */}
           {skillAnchors.map(({ skill, radius, startAngle }) => {
-            const palette = planetColors.skill[skill.type]
+            const palette = getDeterministicPalette(`skill:${skill.id}:${skill.name}:${skill.type}`)
             const size = 46 + (skill.relevance / 10) * 54 + (skill.level / 100) * 10
             const orbitDuration = Math.max(18, Math.min(80, skill.speed * 1.25)) * slowFactor
             return (

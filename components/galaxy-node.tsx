@@ -185,7 +185,7 @@ export function GalaxyNode({
         whileTap={{ scale: 0.96 }}
       >
         {kind === "skill" && textureUrl && (
-          <motion.div
+          <div
             className="absolute inset-0 rounded-full pointer-events-none"
             style={{
               backgroundImage: `url(${textureUrl})`,
@@ -193,8 +193,6 @@ export function GalaxyNode({
               transform: "scale(1.22)",
               opacity: 0.98,
             }}
-            animate={{ rotate: 360 }}
-            transition={{ duration: 22 + (Math.abs(appearance.hueShiftDeg) % 18), repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
           />
         )}
 

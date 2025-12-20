@@ -4,7 +4,7 @@ import { motion, useTransform } from "framer-motion"
 import { useEffect, useMemo, useRef, useState } from "react"
 import type { Skill } from "@/lib/user-data"
 import { planetColors } from "@/lib/user-data"
-import { buildPlanetBackground, getPlanetAppearanceForKind } from "@/lib/planet-appearance"
+import { buildPlanetBackground, getDeterministicPalette, getPlanetAppearanceForKind } from "@/lib/planet-appearance"
 import { generatePlanetTextureSync, type PlanetTextureVariant } from "@/lib/planet-texture"
 import { HoverTooltip } from "@/components/hover-tooltip"
 import { useContinuousRotate } from "@/components/use-continuous-rotate"
@@ -28,7 +28,7 @@ export function PlanetNode({
   onHoverEnd,
   isSystemHovered,
 }: PlanetNodeProps) {
-  const colors = planetColors.skill[skill.type]
+  const themeColors = planetColors.skill[skill.type]
   const size = 24 + (skill.relevance / 10) * 36
   const planetRef = useRef<HTMLDivElement>(null)
   const [textureUrl, setTextureUrl] = useState<string | null>(null)
@@ -43,11 +43,12 @@ export function PlanetNode({
   const isRingEmphasized = isSelected || isHovered
   // Orbit should always be slightly visible, and a bit more visible on hover/selection.
   const ringOpacity = isRingEmphasized ? 0.7 : 0.5
-  const ringBorderColor = isRingEmphasized ? `${colors.base}55` : `${colors.base}26`
   // Deterministic “personality”: stable across export/import without touching the JSON schema.
   // Uses only existing fields: id + name + type.
   const seedKey = `skill:${skill.id}:${skill.name}:${skill.type}`
   const appearance = getPlanetAppearanceForKind("skill", seedKey)
+  const palette = useMemo(() => getDeterministicPalette(seedKey), [seedKey])
+  const ringBorderColor = isRingEmphasized ? `${palette.base}55` : `${palette.base}26`
   const textureVariant: PlanetTextureVariant =
     appearance.variant === "bands"
       ? "gasBands"
@@ -66,14 +67,14 @@ export function PlanetNode({
   const textureFallback = useMemo(
     () =>
       buildPlanetBackground({
-        base: colors.base,
-        accent: colors.accent,
+        base: palette.base,
+        accent: palette.accent,
         variant: appearance.variant,
         hueShiftDeg: appearance.hueShiftDeg,
         seedKey,
         detail: "high",
       }),
-    [appearance.hueShiftDeg, appearance.variant, colors.accent, colors.base, seedKey],
+    [appearance.hueShiftDeg, appearance.variant, palette.accent, palette.base, seedKey],
   )
 
   useEffect(() => {
@@ -83,8 +84,8 @@ export function PlanetNode({
       const url = generatePlanetTextureSync({
         seedKey,
         size: texSize,
-        base: colors.base,
-        accent: colors.accent,
+        base: palette.base,
+        accent: palette.accent,
         variant: textureVariant,
         hueShiftDeg: appearance.hueShiftDeg,
       })
@@ -109,10 +110,9 @@ export function PlanetNode({
       cancelled = true
       window.clearTimeout(t)
     }
-  }, [appearance.hueShiftDeg, colors.accent, colors.base, seedKey, texSize, textureVariant])
+  }, [appearance.hueShiftDeg, palette.accent, palette.base, seedKey, texSize, textureVariant])
 
-  // Internal spin speed: seeded-ish but stable per planet (still independent from orbit).
-  const textureSpinDuration = 18 + ((skill.id * 13) % 22) // 18..39s
+  // No internal spin: skills must NOT rotate on themselves (only orbit rotation is allowed).
 
   return (
     <motion.div
@@ -153,13 +153,13 @@ export function PlanetNode({
           ...(textureUrl
             ? {
                 // Keep a base gradient under the rotating texture to avoid “double stamping” the same image.
-                backgroundImage: `radial-gradient(circle at 28% 26%, ${colors.base}ff 0%, ${colors.accent}ff 55%, ${colors.base}aa 100%)`,
+                backgroundImage: `radial-gradient(circle at 28% 26%, ${palette.base}ff 0%, ${palette.accent}ff 55%, ${palette.base}aa 100%)`,
               }
             : textureFallback),
           boxShadow:
             isSelected || isHovered
-              ? `0 0 40px ${colors.glow}, 0 0 80px ${colors.glow}, inset 0 0 20px rgba(255,255,255,0.3)`
-              : `0 0 15px ${colors.glow}, inset 0 0 10px rgba(255,255,255,0.1)`,
+              ? `0 0 40px ${palette.glow}, 0 0 80px ${palette.glow}, inset 0 0 20px rgba(255,255,255,0.3)`
+              : `0 0 15px ${palette.glow}, inset 0 0 10px rgba(255,255,255,0.1)`,
         }}
         onClick={onClick}
         onHoverStart={onHoverStart}
@@ -169,9 +169,9 @@ export function PlanetNode({
         }}
         whileTap={{ scale: 0.95 }}
       >
-        {/* If we have a generated texture, animate it “inside” to avoid the “static ball” feeling. */}
+        {/* Texture layer (static; no spin) */}
         {textureUrl && (
-          <motion.div
+          <div
             className="absolute inset-0 rounded-full pointer-events-none"
             style={{
               backgroundImage: `url(${textureUrl})`,
@@ -180,8 +180,6 @@ export function PlanetNode({
               opacity: 0.98,
               mixBlendMode: "normal",
             }}
-            animate={{ rotate: 360 }}
-            transition={{ duration: textureSpinDuration, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
           />
         )}
 
@@ -225,7 +223,7 @@ export function PlanetNode({
         <motion.div
           className="absolute -inset-1 rounded-full opacity-50"
           style={{
-            background: `radial-gradient(circle, transparent 60%, ${colors.glow} 100%)`,
+            background: `radial-gradient(circle, transparent 60%, ${palette.glow} 100%)`,
           }}
           animate={{
             opacity: [0.3, 0.6, 0.3],
@@ -242,11 +240,11 @@ export function PlanetNode({
           className="px-4 py-2.5 rounded-xl backdrop-blur-md border text-center max-w-[280px] whitespace-normal break-words"
           style={{
             background: "rgba(0,0,0,0.85)",
-            borderColor: colors.base,
-            boxShadow: `0 0 20px ${colors.glow}`,
+            borderColor: palette.base,
+            boxShadow: `0 0 20px ${palette.glow}`,
           }}
         >
-          <p className="font-mono text-sm font-bold" style={{ color: colors.base }}>
+          <p className="font-mono text-sm font-bold" style={{ color: palette.base }}>
             {skill.name}
           </p>
           <p className="text-xs text-white/60 mt-0.5 leading-relaxed">{skill.hoverInfo}</p>

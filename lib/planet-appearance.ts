@@ -21,6 +21,39 @@ export function hashSeed(seedKey: string): number {
   return hashString(seedKey)
 }
 
+export function getDeterministicPalette(seedKey: string) {
+  // Curated, “cinematic” palette pairs. Intentionally cross-theme to avoid monotony.
+  // Deterministic mapping: same seedKey => same palette.
+  const palettes = [
+    { base: "#22d3ee", accent: "#0891b2" }, // cyan
+    { base: "#d946ef", accent: "#a21caf" }, // magenta
+    { base: "#facc15", accent: "#ca8a04" }, // gold
+    { base: "#10b981", accent: "#059669" }, // emerald
+    { base: "#fb7185", accent: "#e11d48" }, // rose
+    { base: "#60a5fa", accent: "#2563eb" }, // blue
+    { base: "#a78bfa", accent: "#7c3aed" }, // violet
+    { base: "#f97316", accent: "#ea580c" }, // orange
+    { base: "#84cc16", accent: "#4d7c0f" }, // lime
+    { base: "#38bdf8", accent: "#0ea5e9" }, // sky
+    { base: "#f472b6", accent: "#db2777" }, // pink
+    { base: "#c084fc", accent: "#9333ea" }, // purple
+    { base: "#34d399", accent: "#047857" }, // teal-green
+    { base: "#fde047", accent: "#f59e0b" }, // warm yellow
+    { base: "#818cf8", accent: "#4f46e5" }, // indigo
+    { base: "#fb923c", accent: "#c2410c" }, // amber-orange
+    { base: "#2dd4bf", accent: "#0f766e" }, // teal
+    { base: "#f43f5e", accent: "#be123c" }, // red-rose
+  ] as const
+
+  const h = hashString(seedKey)
+  const pick = palettes[h % palettes.length]
+  const swap = (h % 9) === 0
+  const base = swap ? pick.accent : pick.base
+  const accent = swap ? pick.base : pick.accent
+  const glow = `${base}66`
+  return { base, accent, glow }
+}
+
 function seeded01(seed: number, shiftBits: number) {
   // Deterministic pseudo-random in [0,1]
   const v = (seed >>> shiftBits) % 1000
@@ -43,7 +76,8 @@ export function getPlanetAppearanceForKind(kind: PlanetKind, seedKey: string): P
   const ringTiltDeg = (h % 40) - 20 // -20..+19
 
   // Wider hue variance for skills to avoid “same-color planets” when all skills share the same theme/type.
-  const hueShiftDeg = kind === "skill" ? (h % 120) - 60 : (h % 30) - 15
+  // Push it further than theme colors (still deterministic) to make the system feel more dynamic.
+  const hueShiftDeg = kind === "skill" ? (h % 240) - 120 : (h % 30) - 15
 
   // Bias skill planets towards “bands” (gas-giant vibe) while keeping variety.
   const roll = h % 100
