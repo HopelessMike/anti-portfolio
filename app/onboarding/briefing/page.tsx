@@ -85,7 +85,7 @@ export default function OnboardingBriefingPage() {
               Step 2/2: raccontami chi sei <span style={{ color: colors.primary }}>(oltre al tuo ruolo)</span>
             </h1>
             <p className="mt-4 text-white/70 font-mono text-sm">
-              Testo libero. L&apos;AI userà questo briefing insieme a CV e link per costruire un anti‑portfolio che mette al centro la persona.
+            L&apos;AI userà questo briefing per costruire un anti‑portfolio che mette al centro la persona. Più dettagli fornirai più il profilo generato sarà accurato.
             </p>
 
             <div className="mt-8 grid gap-4">

@@ -10,7 +10,6 @@ import { SolarSystem } from "@/components/solar-system"
 import { DownloadButton } from "@/components/download-button"
 import { BackgroundAudio } from "@/components/background-audio"
 
-import { clearFlightLog } from "@/lib/client/storage"
 import { userData as fallbackUserData } from "@/lib/user-data"
 import { normalizeUserData } from "@/lib/client/normalize-user-data"
 import type { AntiPortfolioData } from "@/lib/types/anti-portfolio-data"
@@ -47,15 +46,10 @@ export function AntiPortfolioView({ flightLog, mode }: AntiPortfolioViewProps) {
           type="button"
           className="px-4 py-2 rounded-lg backdrop-blur-xl bg-white/5 border border-white/10 font-mono text-xs text-white/70 hover:bg-white/10"
           onClick={() => {
-            if (mode === "stored") {
-              clearFlightLog()
-              router.push("/onboarding")
-            } else {
-              router.push("/")
-            }
+            router.push("/")
           }}
         >
-          {mode === "stored" ? "HOME / NEW MISSION" : "HOME"}
+          HOME
         </button>
       </div>
 
@@ -78,4 +72,5 @@ export function AntiPortfolioView({ flightLog, mode }: AntiPortfolioViewProps) {
     </div>
   )
 }
+
 
