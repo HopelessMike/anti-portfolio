@@ -38,7 +38,7 @@ export function SolarSystem({ userData }: SolarSystemProps) {
   const isSystemHovered = hoveredItem !== null
 
   // Reduce clutter: prefer fewer meaningful nodes over many similar ones.
-  // Keep the full data in the Flight Log + panel; here we only control what is rendered in the solar view.
+  // Keep the full data in the Mission Log + panel; here we only control what is rendered in the solar view.
   const skillsToShow = [...userData.skills]
     .slice()
     .sort((a, b) => (b.relevance ?? 0) - (a.relevance ?? 0))

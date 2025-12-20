@@ -26,7 +26,7 @@ export function LoadFlightLogButton() {
       saveFlightLog(validated)
       router.push("/anti-portfolio")
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Invalid flight log")
+      setError(e instanceof Error ? e.message : "Invalid mission log")
     }
   }
 
@@ -37,7 +37,7 @@ export function LoadFlightLogButton() {
         onClick={onPick}
         className="inline-flex items-center justify-center rounded-lg px-6 py-3 font-mono text-sm border border-white/10 bg-white/5 hover:bg-white/10 text-white/80"
       >
-        Carica Flight Log (.json)
+        Carica Mission Log (.json)
       </button>
       <input
         ref={inputRef}

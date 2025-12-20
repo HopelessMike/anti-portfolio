@@ -37,7 +37,7 @@ export default function HomePage() {
             href="/anti-portfolio"
             className="inline-flex items-center justify-center rounded-lg px-6 py-3 font-mono text-sm border border-white/10 bg-white/5 hover:bg-white/10 text-white/80"
           >
-            Apri ultimo Flight Log
+            Apri ultimo Mission Log
           </Link>
           <LoadFlightLogButton />
         </div>

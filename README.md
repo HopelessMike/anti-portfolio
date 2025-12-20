@@ -4,7 +4,7 @@ Webapp **Next.js (App Router)** che genera un “anti‑portfolio” interattivo
 
 Funzionalità principali:
 - **Onboarding**: upload PDF + link + briefing
-- **Analisi AI**: estrazione/riassunto e generazione di un `Flight Log` JSON (con regole anti‑invenzione)
+- **Analisi AI**: estrazione/riassunto e generazione di un `Mission Log` JSON (con regole anti‑invenzione)
 - **Render**: sistema solare 2D con nodi cliccabili e pannello dettagli
 - **Export/Import**: download e ricarica del `flight-log.json`
 
@@ -22,7 +22,7 @@ npm run dev
 
 ## Rotte principali
 
-- `/` landing + import del Flight Log
+- `/` landing + import del Mission Log
 - `/onboarding` flusso di generazione (upload/link/briefing)
 - `/anti-portfolio` render della visualizzazione interattiva
 - `/portfolio` redirect legacy a `/anti-portfolio`
@@ -31,10 +31,10 @@ npm run dev
 
 - `POST /api/build`
   - **input**: multipart `files[]` (PDF), `links` (string JSON array), `briefing` (string opzionale)
-  - **output**: `AntiPortfolioData` (Flight Log validato)
+  - **output**: `AntiPortfolioData` (Mission Log validato)
 
-## Flight Log (.json)
+## Mission Log (.json)
 
-- In `/anti-portfolio` il bottone **DOWNLOAD FLIGHT LOG** scarica `flight-log.json`.
-- Nella home (`/`) puoi usare **Carica Flight Log (.json)** per ricaricarlo e riaprire l’anti‑portfolio.
+- In `/anti-portfolio` il bottone **DOWNLOAD MISSION LOG** scarica `flight-log.json`.
+- Nella home (`/`) puoi usare **Carica Mission Log (.json)** per ricaricarlo e riaprire l’anti‑portfolio.
 

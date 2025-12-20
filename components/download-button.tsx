@@ -43,7 +43,7 @@ export function DownloadButton({ theme, payload }: DownloadButtonProps) {
   }
 
   const statusText = {
-    idle: "DOWNLOAD FLIGHT LOG",
+    idle: "DOWNLOAD MISSION LOG",
     compressing: "COMPRESSING...",
     encrypting: "ENCRYPTING...",
     ready: "DOWNLOAD READY",

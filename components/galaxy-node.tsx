@@ -2,9 +2,11 @@
 
 import { motion } from "framer-motion"
 import { AlertTriangle, Link as LinkIcon } from "lucide-react"
+import { useEffect, useMemo, useState } from "react"
 import type { ThemeType } from "@/lib/user-data"
 import { planetColors, themeColors } from "@/lib/user-data"
-import { buildPlanetBackground, getPlanetAppearance } from "@/lib/planet-appearance"
+import { buildPlanetBackground, getPlanetAppearanceForKind } from "@/lib/planet-appearance"
+import { generatePlanetTextureSync, type PlanetTextureVariant } from "@/lib/planet-texture"
 
 type NodeKind = "skill" | "lesson" | "social"
 
@@ -43,7 +45,7 @@ export function GalaxyNode({
   onClick: () => void
   isSystemHovered: boolean
 }) {
-  const appearance = getPlanetAppearance(dataKey)
+  const appearance = getPlanetAppearanceForKind(kind, dataKey)
   const colors =
     kind === "lesson"
       ? planetColors.lesson
@@ -54,6 +56,23 @@ export function GalaxyNode({
   const base = palette?.base ?? (kind === "social" ? themeColors[theme].primary : colors.base)
   const accent = palette?.accent ?? (kind === "social" ? themeColors[theme].secondary : colors.accent)
   const glow = palette?.glow ?? (kind === "social" ? `${themeColors[theme].primary}66` : colors.glow)
+
+  const [textureUrl, setTextureUrl] = useState<string | null>(null)
+
+  const textureVariant: PlanetTextureVariant =
+    appearance.variant === "bands"
+      ? "gasBands"
+      : appearance.variant === "craters"
+        ? "rockyCraters"
+        : appearance.variant === "ice"
+          ? "ice"
+          : appearance.variant === "tech-grid"
+            ? "techGrid"
+            : appearance.variant === "lava"
+              ? "lava"
+              : "nebula"
+
+  const texSize = size < 44 ? 128 : size < 72 ? 192 : 256
 
   const texture = buildPlanetBackground({
     base,
@@ -69,7 +88,47 @@ export function GalaxyNode({
             : appearance.variant
           : appearance.variant,
     hueShiftDeg: appearance.hueShiftDeg,
+    seedKey: dataKey,
+    detail: kind === "skill" ? "high" : "low",
   })
+
+  const textureFallback = useMemo(() => texture, [texture])
+
+  useEffect(() => {
+    if (kind !== "skill") return
+    let cancelled = false
+
+    const run = () => {
+      const url = generatePlanetTextureSync({
+        seedKey: dataKey,
+        size: texSize,
+        base,
+        accent,
+        variant: textureVariant,
+        hueShiftDeg: appearance.hueShiftDeg,
+      })
+      if (!cancelled) setTextureUrl(url)
+    }
+
+    const w = window as unknown as {
+      requestIdleCallback?: (cb: () => void, opts?: { timeout?: number }) => number
+      cancelIdleCallback?: (id: number) => void
+    }
+
+    if (w.requestIdleCallback) {
+      const id = w.requestIdleCallback(run, { timeout: 250 })
+      return () => {
+        cancelled = true
+        w.cancelIdleCallback?.(id)
+      }
+    }
+
+    const t = window.setTimeout(run, 0)
+    return () => {
+      cancelled = true
+      window.clearTimeout(t)
+    }
+  }, [accent, appearance.hueShiftDeg, base, dataKey, kind, texSize, textureVariant])
 
   const dimOthers = isSystemHovered && !isHovered && !isSelected
 
@@ -108,7 +167,11 @@ export function GalaxyNode({
         style={{
           width: size,
           height: size,
-          ...texture,
+          ...(kind === "skill" && textureUrl
+            ? {
+                backgroundImage: `radial-gradient(circle at 28% 26%, ${base}ff 0%, ${accent}ff 55%, ${base}aa 100%)`,
+              }
+            : textureFallback),
           boxShadow:
             isSelected || isHovered
               ? `0 0 50px ${glow}, 0 0 110px ${glow}, inset 0 0 18px rgba(255,255,255,0.25)`
@@ -121,6 +184,20 @@ export function GalaxyNode({
         whileHover={{ scale: 1.22 }}
         whileTap={{ scale: 0.96 }}
       >
+        {kind === "skill" && textureUrl && (
+          <motion.div
+            className="absolute inset-0 rounded-full pointer-events-none"
+            style={{
+              backgroundImage: `url(${textureUrl})`,
+              backgroundSize: "cover",
+              transform: "scale(1.22)",
+              opacity: 0.98,
+            }}
+            animate={{ rotate: 360 }}
+            transition={{ duration: 22 + (Math.abs(appearance.hueShiftDeg) % 18), repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
+          />
+        )}
+
         {/* Planet highlight */}
         <div
           className="absolute inset-0 rounded-full opacity-35 pointer-events-none"
