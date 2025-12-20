@@ -2,9 +2,11 @@
 
 import { motion } from "framer-motion"
 import { AlertTriangle } from "lucide-react"
+import { useRef } from "react"
 import type { LessonLearned } from "@/lib/user-data"
 import { planetColors } from "@/lib/user-data"
 import { buildPlanetBackground, getPlanetAppearance } from "@/lib/planet-appearance"
+import { HoverTooltip } from "@/components/hover-tooltip"
 
 interface LessonPlanetProps {
   lesson: LessonLearned
@@ -28,6 +30,7 @@ export function LessonPlanet({
   const colors = planetColors.lesson
   const appearance = getPlanetAppearance(`lesson:${lesson.id}:${lesson.title}:${lesson.year}`)
   const size = 22 + (lesson.relevance / 10) * 48
+  const planetRef = useRef<HTMLDivElement>(null)
   const texture = buildPlanetBackground({
     base: colors.base,
     accent: colors.accent,
@@ -66,6 +69,7 @@ export function LessonPlanet({
 
       {/* Planet with danger styling */}
       <motion.div
+        ref={planetRef}
         className="absolute rounded-full cursor-pointer flex items-center justify-center pointer-events-auto"
         style={{
           width: size,
@@ -112,44 +116,19 @@ export function LessonPlanet({
       </motion.div>
 
       {/* Hover tooltip */}
-      <motion.div
-        className="absolute pointer-events-none z-50"
-        style={{
-          left: "50%",
-          top: 0,
-          marginTop: size / 2 + 12,
-        }}
-        initial={{ opacity: 0, y: -5, scale: 0.9 }}
-        animate={{
-          opacity: isHovered ? 1 : 0,
-          y: isHovered ? 0 : -5,
-          scale: isHovered ? 1 : 0.9,
-          rotate: 360,
-        }}
-        transition={{
-          opacity: { duration: 0.2 },
-          y: { duration: 0.2 },
-          scale: { duration: 0.2 },
-          rotate: {
-            duration: rotationDuration,
-            repeat: Number.POSITIVE_INFINITY,
-            ease: "linear",
-          },
-        }}
-      >
+      <HoverTooltip anchorRef={planetRef} open={isHovered} placement="bottom" offset={12} zIndex={80}>
         <div
-          className="px-4 py-2.5 rounded-xl backdrop-blur-md border border-red-500/50 whitespace-nowrap text-center"
+          className="px-4 py-2.5 rounded-xl backdrop-blur-md border border-red-500/50 text-center max-w-[280px] whitespace-normal break-words"
           style={{
             background: "rgba(0,0,0,0.85)",
-            transform: "translateX(-50%)",
             boxShadow: `0 0 20px ${colors.glow}`,
           }}
         >
           <p className="font-mono text-sm font-bold text-red-400">{lesson.title}</p>
-          <p className="text-xs text-white/60 mt-0.5">{lesson.hoverInfo}</p>
+          <p className="text-xs text-white/60 mt-0.5 leading-relaxed">{lesson.hoverInfo}</p>
           <p className="text-[11px] text-white/40 mt-1">Click per aprire scheda</p>
         </div>
-      </motion.div>
+      </HoverTooltip>
     </motion.div>
   )
 }

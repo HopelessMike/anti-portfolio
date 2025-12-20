@@ -164,7 +164,7 @@ export function GalaxyNode({
         transition={{ duration: 0.18 }}
       >
         <div
-          className="px-4 py-2.5 rounded-xl backdrop-blur-md border whitespace-nowrap text-center"
+          className="px-4 py-2.5 rounded-xl backdrop-blur-md border text-center max-w-[280px] whitespace-normal break-words"
           style={{
             background: "rgba(0,0,0,0.86)",
             borderColor: base,
@@ -175,7 +175,7 @@ export function GalaxyNode({
           <p className="font-mono text-sm font-bold" style={{ color: base }}>
             {label}
           </p>
-          <p className="text-xs text-white/60 mt-0.5">{hoverInfo}</p>
+          <p className="text-xs text-white/60 mt-0.5 leading-relaxed">{hoverInfo}</p>
           <p className="text-[11px] text-white/40 mt-1">Click per aprire scheda</p>
         </div>
       </motion.div>

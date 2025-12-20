@@ -1,8 +1,10 @@
 "use client"
 
 import { motion } from "framer-motion"
+import { useRef } from "react"
 import type { Skill } from "@/lib/user-data"
 import { planetColors } from "@/lib/user-data"
+import { HoverTooltip } from "@/components/hover-tooltip"
 
 interface PlanetNodeProps {
   skill: Skill
@@ -25,6 +27,7 @@ export function PlanetNode({
 }: PlanetNodeProps) {
   const colors = planetColors.skill[skill.type]
   const size = 24 + (skill.relevance / 10) * 36
+  const planetRef = useRef<HTMLDivElement>(null)
 
   const rotationDuration = isSystemHovered ? skill.speed * 4 : skill.speed
   const ringOpacity = isSelected || isHovered ? 0.55 : 0.12
@@ -63,6 +66,7 @@ export function PlanetNode({
 
       {/* Planet */}
       <motion.div
+        ref={planetRef}
         className="absolute rounded-full cursor-pointer pointer-events-auto"
         style={{
           width: size,
@@ -140,46 +144,21 @@ export function PlanetNode({
         />
       </motion.div>
 
-      <motion.div
-        className="absolute pointer-events-none z-50"
-        style={{
-          left: "50%",
-          top: 0,
-          marginTop: size / 2 + 12,
-        }}
-        initial={{ opacity: 0, y: -5, scale: 0.9 }}
-        animate={{
-          opacity: isHovered ? 1 : 0,
-          y: isHovered ? 0 : -5,
-          scale: isHovered ? 1 : 0.9,
-          rotate: -360,
-        }}
-        transition={{
-          opacity: { duration: 0.2 },
-          y: { duration: 0.2 },
-          scale: { duration: 0.2 },
-          rotate: {
-            duration: rotationDuration,
-            repeat: Number.POSITIVE_INFINITY,
-            ease: "linear",
-          },
-        }}
-      >
+      <HoverTooltip anchorRef={planetRef} open={isHovered} placement="bottom" offset={12} zIndex={80}>
         <div
-          className="px-4 py-2.5 rounded-xl backdrop-blur-md border whitespace-nowrap text-center"
+          className="px-4 py-2.5 rounded-xl backdrop-blur-md border text-center max-w-[280px] whitespace-normal break-words"
           style={{
             background: "rgba(0,0,0,0.85)",
             borderColor: colors.base,
-            transform: "translateX(-50%)",
             boxShadow: `0 0 20px ${colors.glow}`,
           }}
         >
           <p className="font-mono text-sm font-bold" style={{ color: colors.base }}>
             {skill.name}
           </p>
-          <p className="text-xs text-white/60 mt-0.5">{skill.hoverInfo}</p>
+          <p className="text-xs text-white/60 mt-0.5 leading-relaxed">{skill.hoverInfo}</p>
         </div>
-      </motion.div>
+      </HoverTooltip>
     </motion.div>
   )
 }

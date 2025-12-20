@@ -1,9 +1,11 @@
 "use client"
 
 import { motion } from "framer-motion"
+import { useRef } from "react"
 import type { Project, ThemeType } from "@/lib/user-data"
 import { themeColors } from "@/lib/user-data"
 import { buildPlanetBackground, getPlanetAppearance } from "@/lib/planet-appearance"
+import { HoverTooltip } from "@/components/hover-tooltip"
 
 export function ProjectMoon({
   project,
@@ -40,6 +42,7 @@ export function ProjectMoon({
   const orbitR = 44 + index * 18
   const duration = isSystemHovered ? 22 + index * 4 : 12 + index * 3
   const dimOthers = isSystemHovered && !isHovered && !isSelected
+  const moonRef = useRef<HTMLButtonElement>(null)
 
   const texture = buildPlanetBackground({
     base: colors.primary,
@@ -75,6 +78,7 @@ export function ProjectMoon({
       >
         <motion.button
           type="button"
+          ref={moonRef}
           className="absolute rounded-full pointer-events-auto"
           style={{
             left: "50%",
@@ -114,30 +118,23 @@ export function ProjectMoon({
           />
         </motion.button>
 
-        {/* Hover tooltip */}
-        <motion.div
-          className="absolute pointer-events-none z-50"
-          style={{ left: "50%", top: 0, marginTop: size / 2 + 12 }}
-          initial={{ opacity: 0, y: -6, scale: 0.96 }}
-          animate={{ opacity: isHovered ? 1 : 0, y: isHovered ? 0 : -6, scale: isHovered ? 1 : 0.96 }}
-          transition={{ duration: 0.18 }}
-        >
+        {/* Hover tooltip (screen-anchored) */}
+        <HoverTooltip anchorRef={moonRef} open={isHovered} placement="bottom" offset={12} zIndex={80}>
           <div
-            className="px-4 py-2.5 rounded-xl backdrop-blur-md border whitespace-nowrap text-center"
+            className="px-4 py-2.5 rounded-xl backdrop-blur-md border text-center max-w-[280px] whitespace-normal break-words"
             style={{
               background: "rgba(0,0,0,0.86)",
               borderColor: colors.primary,
-              transform: "translateX(-50%)",
               boxShadow: `0 0 22px ${colors.primary}44`,
             }}
           >
             <p className="font-mono text-sm font-bold" style={{ color: colors.primary }}>
               {project.title}
             </p>
-            <p className="text-xs text-white/60 mt-0.5">{project.outcome || project.description}</p>
+            <p className="text-xs text-white/60 mt-0.5 leading-relaxed">{project.outcome || project.description}</p>
             <p className="text-[11px] text-white/40 mt-1">Click per aprire scheda</p>
           </div>
-        </motion.div>
+        </HoverTooltip>
       </motion.div>
     </motion.div>
   )

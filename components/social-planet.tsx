@@ -2,8 +2,10 @@
 
 import { motion } from "framer-motion"
 import { Linkedin, Github, Globe } from "lucide-react"
+import { useRef } from "react"
 import type { SocialLink } from "@/lib/user-data"
 import { planetColors } from "@/lib/user-data"
+import { HoverTooltip } from "@/components/hover-tooltip"
 
 interface SocialPlanetProps {
   social: SocialLink
@@ -33,6 +35,7 @@ export function SocialPlanet({
   const colors = planetColors.social[social.icon]
   const size = 24 + (social.relevance / 10) * 36
   const Icon = iconMap[social.icon]
+  const planetRef = useRef<HTMLDivElement>(null)
 
   const rotationDuration = isSystemHovered ? social.speed * 4 : social.speed
   const ringOpacity = isSelected || isHovered ? 0.55 : 0.14
@@ -64,6 +67,7 @@ export function SocialPlanet({
 
       {/* Planet */}
       <motion.div
+        ref={planetRef}
         className="absolute rounded-full cursor-pointer flex items-center justify-center pointer-events-auto"
         style={{
           width: size,
@@ -101,46 +105,21 @@ export function SocialPlanet({
       </motion.div>
 
       {/* Hover tooltip */}
-      <motion.div
-        className="absolute pointer-events-none z-50"
-        style={{
-          left: "50%",
-          top: 0,
-          marginTop: size / 2 + 12,
-        }}
-        initial={{ opacity: 0, y: -5, scale: 0.9 }}
-        animate={{
-          opacity: isHovered ? 1 : 0,
-          y: isHovered ? 0 : -5,
-          scale: isHovered ? 1 : 0.9,
-          rotate: -360,
-        }}
-        transition={{
-          opacity: { duration: 0.2 },
-          y: { duration: 0.2 },
-          scale: { duration: 0.2 },
-          rotate: {
-            duration: rotationDuration,
-            repeat: Number.POSITIVE_INFINITY,
-            ease: "linear",
-          },
-        }}
-      >
+      <HoverTooltip anchorRef={planetRef} open={isHovered} placement="bottom" offset={12} zIndex={80}>
         <div
-          className="px-4 py-2.5 rounded-xl backdrop-blur-md border whitespace-nowrap text-center"
+          className="px-4 py-2.5 rounded-xl backdrop-blur-md border text-center max-w-[280px] whitespace-normal break-words"
           style={{
             background: "rgba(0,0,0,0.85)",
             borderColor: colors.base,
-            transform: "translateX(-50%)",
             boxShadow: `0 0 20px ${colors.glow}`,
           }}
         >
           <p className="font-mono text-sm font-bold" style={{ color: colors.base }}>
             {social.name}
           </p>
-          <p className="text-xs text-white/60 mt-0.5">{social.hoverInfo}</p>
+          <p className="text-xs text-white/60 mt-0.5 leading-relaxed">{social.hoverInfo}</p>
         </div>
-      </motion.div>
+      </HoverTooltip>
     </motion.div>
   )
 }

@@ -87,7 +87,7 @@ export function IdentityStar({
         transition={{ duration: 0.18 }}
       >
         <div
-          className="px-4 py-2.5 rounded-xl backdrop-blur-md border whitespace-nowrap text-center max-w-[340px]"
+          className="px-4 py-2.5 rounded-xl backdrop-blur-md border text-center max-w-[280px] whitespace-normal break-words"
           style={{
             background: "rgba(0,0,0,0.86)",
             borderColor: `${colors.secondary}66`,
@@ -98,7 +98,7 @@ export function IdentityStar({
           <p className="font-mono text-[11px] tracking-wider" style={{ color: colors.secondary }}>
             IDENTITY SIGNAL
           </p>
-          <p className="text-xs text-white/80 mt-1">{text}</p>
+          <p className="text-xs text-white/80 mt-1 leading-relaxed">{text}</p>
           <p className="text-[11px] text-white/40 mt-1">Click per aprire scheda</p>
         </div>
       </motion.div>

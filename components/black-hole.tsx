@@ -207,7 +207,7 @@ export function BlackHole({
         transition={{ duration: 0.2 }}
       >
         <div
-          className="px-4 py-3 rounded-lg backdrop-blur-md border border-purple-500/40 whitespace-nowrap text-center"
+          className="px-4 py-3 rounded-lg backdrop-blur-md border border-purple-500/40 text-center max-w-[260px] whitespace-normal break-words"
           style={{ background: "rgba(0,0,0,0.9)" }}
         >
           <p className="font-mono text-sm font-bold text-purple-400">{failure.title}</p>
