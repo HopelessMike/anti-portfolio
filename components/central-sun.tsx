@@ -61,7 +61,7 @@ export function CentralSun({ core, coreDescription, theme, onHoverStart, onHover
           }}
         />
         <div
-          className="absolute w-24 h-24 rounded-full glow-primary animate-[pulse_5s_ease-in-out_infinite]"
+          className="absolute w-24 h-24 rounded-full glow-primary animate-[pulse_5.5s_ease-in-out_infinite]"
           style={{
             backgroundImage: `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`,
             filter: "blur(0.2px)",
@@ -69,7 +69,7 @@ export function CentralSun({ core, coreDescription, theme, onHoverStart, onHover
           }}
         />
         <div
-          className="absolute w-36 h-36 rounded-full border-2 animate-[ping_4.5s_ease-out_infinite]"
+          className="absolute w-36 h-36 rounded-full border-2 animate-[ping_6s_ease-out_infinite]"
           style={{ borderColor: `${colors.primary}1f`, filter: "blur(0.4px)" }}
         />
 
