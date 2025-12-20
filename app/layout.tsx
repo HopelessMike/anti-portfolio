@@ -15,7 +15,7 @@ const jetbrainsMono = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
-  title: "Cosmic Flight Recorder | Anti-Portfolio",
+  title: "Cosmic Mission Recorder | Anti-Portfolio",
   description:
     "An immersive journey through skills, projects, and lessons learned - visualized as a cosmic solar system.",
   generator: "v0.app",
